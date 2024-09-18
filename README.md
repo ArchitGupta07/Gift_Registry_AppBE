@@ -64,6 +64,17 @@ $ npm run test:cov
 
 ```
 $ nest g module users
-$ npm g controller users
-$ npm g service users
+$ nest g controller users
+$ nest g service users
 ```
+
+# Prism Creation
+
+npm i prisma -D
+npm prism init
+
+# Prisma Installation
+
+npm install prisma @prisma/client
+npx prisma init
+npx prisma migrate dev
