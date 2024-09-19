@@ -18,8 +18,8 @@ export class GiftsController {
   constructor(private readonly giftsService: GiftsService) {}
 
   @Post()
-  create(@Body() createEmployeeDto: Prisma.GiftCreateInput) {
-    return this.giftsService.create(createEmployeeDto);
+  create(@Body() createGiftDto: Prisma.GiftCreateInput) {
+    return this.giftsService.create(createGiftDto);
   }
 
   @SkipThrottle({ default: false }) // this will make skilthrottle to not work for this particular api

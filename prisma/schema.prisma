@@ -67,6 +67,7 @@ model Registry{
   id Int @id @default(autoincrement())
   name String
   userId Int
+  eventId Int @default(1)
   gifts Gift[] @relation("RegistryGifts")
 }
 
