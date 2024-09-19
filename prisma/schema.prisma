@@ -24,6 +24,29 @@ model User {
   updatedAt   DateTime @updatedAt
 }
 
+
+model Group{
+  id Int @id @default(autoincrement())
+  userId Int
+  groupName String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum Role {
+  OWNER
+  MEMBER
+}
+
+model UserGroup {
+  id Int @id @default(autoincrement())
+  userId Int
+  groupId Int
+  role  Role
+}
+
+
 model Event{
   id Int @id @default(autoincrement())
   userId Int
@@ -44,6 +67,7 @@ model Registry{
   id Int @id @default(autoincrement())
   name String
   userId Int
+  eventId Int @default(1)
   gifts Gift[] @relation("RegistryGifts")
 }
 
@@ -54,4 +78,10 @@ model Gift{
   registryId Int
   registry Registry @relation("RegistryGifts",fields: [registryId], references: [id])
   giftStatus Boolean
+}
+
+model  UserGifts {
+  id Int @id @default(autoincrement())
+  userId Int 
+  giftId Int  
 }
