@@ -33,6 +33,20 @@ model Group{
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+enum Role {
+  OWNER
+  MEMBER
+}
+
+model UserGroup {
+  id Int @id @default(autoincrement())
+  userId Int
+  groupId Int
+  role  Role
+}
+
+
 model Event{
   id Int @id @default(autoincrement())
   userId Int
