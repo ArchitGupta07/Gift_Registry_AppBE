@@ -1,12 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEventDto } from './events.dto';
+import { DatabaseService } from 'src/database/database.service';
 
 @Injectable()
 export class EventsService {
+    constructor(private readonly databaseService : DatabaseService){};
+
     async createEvent( createEvent: CreateEventDto) {
         try {
             const { userId,eventName, description, organizers, members }: CreateEventDto = createEvent;
-            const event = await prisma.event.create({
+            const event = await this.databaseService.event.create({
                 data: {
                     userId,
                     eventName,
@@ -27,7 +30,7 @@ export class EventsService {
                     role : 'member'
                 }))
             ];
-            await prisma.userEvents.createMany({
+            await this.databaseService.userEvents.createMany({
                 data : userEvents
             }) 
             return event;
@@ -38,7 +41,7 @@ export class EventsService {
     }
     async getEvents(userId : Number) {
         try {
-            const userEvents = await prisma.userEvents.findMany({
+            const userEvents = await this.databaseService.userEvents.findMany({
               where: {
                 userId: userId,
               },
@@ -52,7 +55,7 @@ export class EventsService {
               (event: { eventId: any }) => event.eventId
             );
       
-            const events = await prisma.event.findMany({
+            const events = await this.databaseService.event.findMany({
               where: {
                 id: {
                   in: eventIds,
