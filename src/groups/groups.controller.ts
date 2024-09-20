@@ -1,8 +1,9 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { GroupsService } from './groups.service';
 import { Prisma } from '@prisma/client';
 import { group } from 'console';
 import { CreateGroupRelationDto } from './dtos/groups.dto';
+import { days } from '@nestjs/throttler';
 
 @Controller('groups')
 export class GroupsController {
@@ -21,5 +22,22 @@ export class GroupsController {
             message: "Group created successfully",
             data: groupId
         };
+    }
+
+    @Get(':id')
+    async findOne(@Param('id', ParseIntPipe) id: number)
+    {
+        const response = await this.groupsService.getGroupData(id);
+        if(response){
+            return {
+                message : "success",
+                data : response
+            }
+        }
+        return {
+            message : "unsuccessful",
+            data : response
+        }
+        
     }
 }

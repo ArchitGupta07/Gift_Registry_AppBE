@@ -33,6 +33,19 @@ export class GroupsService {
                 return -1;  
             }
     }
+
+    async getGroupData(groupId : number){
+        try {
+            const group = await this.databaseService.group.findFirst({
+                where : {
+                    id : groupId
+                }
+            })
+            return group;
+        } catch (error) {
+            return null;
+        }
+    }
     
 
 
