@@ -23,7 +23,7 @@ export class EventsService {
         },
       });
       const eventId = event.id;
-      // now add the mapping in the userEvent table
+    
       let userEvents = [
         ...organizers.map((userId) => ({
           userId,
@@ -69,7 +69,6 @@ export class EventsService {
         },
       });
 
-      // for every event i also want to send the type of event for that specific event
       const eventsWithRoles = events.map((event) => {
         const userEvent = userEvents.find((ue) => ue.eventId === event.id);
         return {
