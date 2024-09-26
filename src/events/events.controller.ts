@@ -1,7 +1,9 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import {EventsService} from './events.service';
 import { CreateEventDto } from './events.dto';
-import { Prisma } from '@prisma/client';
+import { ApiTags } from '@nestjs/swagger';
+
+@ApiTags('events')
 @Controller('events')
 export class EventsController {
     constructor(private readonly eventsService:EventsService){}
@@ -23,7 +25,7 @@ export class EventsController {
             };
     }
 
-    @Get('user/:userId')
+    @Get('/:userId')
     async getEvents(@Param('userId',ParseIntPipe) userId: number){
         const events = await this.eventsService.getEvents(userId);
 

@@ -3,7 +3,9 @@ import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { authService } from './auth.service'; // Correct import statement
 import { AuthDto } from './dto/auth.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly AuthService: authService) {} // Correct constructor parameter name

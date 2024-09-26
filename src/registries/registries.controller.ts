@@ -11,7 +11,9 @@ import {
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import { Prisma } from '@prisma/client';
 import { RegistriesService } from './registries.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('registries')
 @Controller('registries')
 export class RegistriesController {
   constructor(private readonly registriesService: RegistriesService) {}

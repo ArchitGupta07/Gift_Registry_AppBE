@@ -12,7 +12,9 @@ import {
 import { GiftsService } from './gifts.service';
 import { Prisma } from '@prisma/client';
 import { Throttle, SkipThrottle } from '@nestjs/throttler';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('gifts')
 @Controller('gifts')
 export class GiftsController {
   constructor(private readonly giftsService: GiftsService) {}
