@@ -4,6 +4,7 @@ import { Prisma } from '@prisma/client';
 import { group } from 'console';
 import { CreateGroupRelationDto } from './dtos/groups.dto';
 import { days } from '@nestjs/throttler';
+import { response } from 'express';
 
 @Controller('groups')
 export class GroupsController {
@@ -40,4 +41,5 @@ export class GroupsController {
         }
         
     }
+   
 }
