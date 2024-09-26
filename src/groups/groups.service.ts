@@ -6,7 +6,7 @@ import { DatabaseService } from 'src/database/database.service';
 export class GroupsService {
     constructor(private readonly databaseService : DatabaseService){}
     // input : groupDto and list of all the users in the group
-    async createGroup(createGroupDto : Prisma.GroupCreateInput,userIds? : number[])
+    async createGroup(createGroupDto : Prisma.GroupCreateInput,userIds? : number[]) : Promise<number>
     {
         try {
             const groupResponse = await this.databaseService.group.create({
@@ -26,8 +26,6 @@ export class GroupsService {
                 data : userGroupRelation
             })
             return groupId;
-
-
             }catch (error)
             {
                 return -1;  
