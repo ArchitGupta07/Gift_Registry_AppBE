@@ -3,15 +3,18 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Patch,
   Post,
   Query,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { GiftsService } from './gifts.service';
 import { Prisma } from '@prisma/client';
-import { Throttle, SkipThrottle } from '@nestjs/throttler';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('gifts')
@@ -20,32 +23,97 @@ export class GiftsController {
   constructor(private readonly giftsService: GiftsService) {}
 
   @Post()
-  create(@Body() createGiftDto: Prisma.GiftCreateInput) {
-    return this.giftsService.create(createGiftDto);
+  async create(
+    @Body() createGiftDto: Prisma.GiftCreateInput,
+    @Res() res: Response,
+  ) {
+    try {
+      const gift = await this.giftsService.create(createGiftDto);
+      return res.status(HttpStatus.CREATED).json(gift);
+    } catch (error) {
+      console.error(error);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Failed to create gift',
+        error: error.message,
+      });
+    }
   }
 
-  @SkipThrottle({ default: false }) // this will make skilthrottle to not work for this particular api
-  @Get('registry/:registryId')
-  findAll(@Param('registryId', ParseIntPipe) registryId: number) {
-    return this.giftsService.findAll(registryId);
+  @Get('giftList/:registryId')
+  async findAll(
+    @Param('registryId', ParseIntPipe) registryId: number,
+    @Res() res: Response,
+  ) {
+    try {
+      const gifts = await this.giftsService.findAll(registryId);
+      return res.status(HttpStatus.OK).json(gifts);
+    } catch (error) {
+      console.error(error);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Failed to retrieve gifts',
+        error: error.message,
+      });
+    }
   }
 
-  @Throttle({ short: { ttl: 1000, limit: 1 } }) // this will help you a diifrenet type of throttle compared to what you defined in app.modules
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.giftsService.findOne(+id);
+  async findOne(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+    try {
+      const gift = await this.giftsService.findOne(id);
+      if (!gift) {
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .json({ message: 'Gift not found' });
+      }
+      return res.status(HttpStatus.OK).json(gift);
+    } catch (error) {
+      console.error(error);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Failed to retrieve gift',
+        error: error.message,
+      });
+    }
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateEmployeeDto: Prisma.GiftUpdateInput,
+    @Body() updateGiftDto: Prisma.GiftUpdateInput,
+    @Res() res: Response,
   ) {
-    return this.giftsService.update(+id, updateEmployeeDto);
+    try {
+      const updatedGift = await this.giftsService.update(id, updateGiftDto);
+      if (!updatedGift) {
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .json({ message: 'Gift not found' });
+      }
+      return res.status(HttpStatus.OK).json(updatedGift);
+    } catch (error) {
+      console.error(error);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Failed to update gift',
+        error: error.message,
+      });
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.giftsService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+    try {
+      const deleted = await this.giftsService.remove(id);
+      if (!deleted) {
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .json({ message: 'Gift not found' });
+      }
+      return res.status(HttpStatus.NO_CONTENT).send();
+    } catch (error) {
+      console.error(error);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Failed to delete gift',
+        error: error.message,
+      });
+    }
   }
 }

@@ -20,7 +20,7 @@ export class RegistriesService {
         },
       });
 
-    return this.databaseService.registry.findMany();
+    // return this.databaseService.registry.findMany();
   }
 
   async findOne(id: number) {
