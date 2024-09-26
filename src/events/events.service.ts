@@ -17,7 +17,7 @@ export class EventsService {
       }: CreateEventDto = createEvent;
       const event = await this.databaseService.event.create({
         data: {
-          userId,
+          userId:userId,
           eventName,
           description,
         },

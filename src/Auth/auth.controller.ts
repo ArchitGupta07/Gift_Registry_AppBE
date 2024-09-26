@@ -17,26 +17,32 @@ export class AuthController {
   }
 
   @Get('google/callback')
-  @UseGuards(AuthGuard('google'))
-  async googleAuthRedirect(@Req() req: any, @Res() res: Response) {
-    try {
-      // Validate or create user
-      const userReq = req.user;
-      const user = await this.AuthService.ValidateOrCreateUser(
-        userReq.user.googleId,
-        userReq.user
-      );
+@UseGuards(AuthGuard('google'))
+async googleAuthRedirect(@Req() req: any, @Res() res: Response) {
+  try {
+    // Validate or create user
+    const userReq = req.user;
+    const user = await this.AuthService.ValidateOrCreateUser(
+      userReq.user.googleId,
+      userReq.user
+    );
 
-      // User data to send
-      const userDto = new AuthDto(user);
-
-      // Redirect to the profile page with user data as query parameter
-      const redirectUrl = `http://localhost:3000/dashboard?user=${encodeURIComponent(JSON.stringify(userDto))}`;
-      console.log(userDto.profilePic,userDto.email,userDto.username);
-      res.redirect(redirectUrl);
-    } catch (error) {
-      console.error('Error handling Google callback:', error);
-      res.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Internal Server Error');
+    // Check if the user was created successfully
+    if (!user) {
+      throw new Error('User creation failed');
     }
+
+    // User data to send
+    const userDto = new AuthDto(user);
+    
+    // Redirect URL with user data (Consider using sessions or JWT instead)
+    const redirectUrl = `http://localhost:3000/dashboard?user=${encodeURIComponent(JSON.stringify(userDto))}`;
+    console.log(userDto.profilePic, userDto.email, userDto.username);
+    
+    res.redirect(redirectUrl);
+  } catch (error) {
+    console.error('Error handling Google callback:', error);
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Internal Server Error');
   }
+}
 }
