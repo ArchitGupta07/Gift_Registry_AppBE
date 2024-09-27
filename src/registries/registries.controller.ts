@@ -56,10 +56,17 @@ export class RegistriesController {
       const registry = await this.registriesService.create(createRegistryDto);
       return res.status(HttpStatus.CREATED).json(registry);
     } catch (error) {
-      throw new HttpException(
-        'Failed to create registry',
-        HttpStatus.BAD_REQUEST,
-      );
+      if (error instanceof Prisma.PrismaClientValidationError) {
+        return res.status(HttpStatus.BAD_REQUEST).json({
+          message: 'Invalid input data',
+          error: error.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+          message: 'Failed to create registry',
+          error: error.message,
+        });
+      }
     }
   }
 
@@ -114,10 +121,10 @@ export class RegistriesController {
       }
       return res.status(HttpStatus.OK).json(registry);
     } catch (error) {
-      throw new HttpException(
-        'Failed to fetch registry',
-        HttpStatus.BAD_REQUEST,
-      );
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Failed to Find registry due to server error',
+        error: error.message,
+      });
     }
   }
 
@@ -154,10 +161,17 @@ export class RegistriesController {
       }
       return res.status(HttpStatus.OK).json(updatedRegistry);
     } catch (error) {
-      throw new HttpException(
-        'Failed to update registry',
-        HttpStatus.BAD_REQUEST,
-      );
+      if (error instanceof Prisma.PrismaClientValidationError) {
+        return res.status(HttpStatus.BAD_REQUEST).json({
+          message: 'Invalid input data',
+          error: error.message,
+        });
+      } else {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+          message: 'Failed to Update registry',
+          error: error.message,
+        });
+      }
     }
   }
 
@@ -183,10 +197,10 @@ export class RegistriesController {
       }
       return res.status(HttpStatus.NO_CONTENT).send();
     } catch (error) {
-      throw new HttpException(
-        'Failed to delete registry',
-        HttpStatus.BAD_REQUEST,
-      );
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Failed to delete registry due to server error',
+        error: error.message,
+      });
     }
   }
 }

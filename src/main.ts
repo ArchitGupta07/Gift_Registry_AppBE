@@ -6,6 +6,7 @@ import *  as dotenv from 'dotenv'
 dotenv.config();
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('v1');
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true,
@@ -31,7 +32,7 @@ async function bootstrap() {
     
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('v1/api', app, document);
   await app.listen(`${process.env.PORT}`);
 }
 bootstrap();

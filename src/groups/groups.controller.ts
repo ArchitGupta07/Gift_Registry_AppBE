@@ -1,7 +1,7 @@
-import { Body, Controller, Get, HttpCode, HttpException, HttpStatus, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { GroupsService } from './groups.service';
-import { CreateGroupRelationDto } from './groups.dto';
-import { ApiBadRequestResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CreateGroupRelationDto, UpdateGroupDto } from './groups.dto';
+import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('groups')
 @Controller('groups')
@@ -10,46 +10,113 @@ export class GroupsController {
 
 constructor(private readonly groupsService : GroupsService){}
 
-@Post()
-@ApiResponse({ status: 201, description: 'Group created successfully.' })
-@ApiBadRequestResponse({
-    status: 400,
-    description: 'Invalid input, validation failed.',
-})
-async create(@Body() createGroupRelationDto: CreateGroupRelationDto) {
-    const groupId = await this.groupsService.createGroup(createGroupRelationDto.createGroupDto, createGroupRelationDto.userId);
-    
-    if (groupId === -1) {
-        throw new HttpException({
-            message: "Group creation unsuccessful",
-            data: groupId
-        }, HttpStatus.BAD_REQUEST);
+    @Post()
+    @ApiResponse({ status: 201, description: 'Group created successfully.' })
+    @ApiBadRequestResponse({
+        status: 400,
+        description: 'Invalid input, validation failed.',
+    })
+    @ApiInternalServerErrorResponse({ status: 500, description: 'Internal server error.' })
+    async create(@Body() createGroupRelationDto: CreateGroupRelationDto) {
+        try {
+            const groupId = await this.groupsService.createGroup(createGroupRelationDto);
+            return {
+                statusCode: HttpStatus.CREATED,
+                message: "Group created successfully",
+                data: groupId
+        };
+        } catch (error) {
+            // we can create a generic function where we can pass the error and it will decide what kind of error code would be send to the user
+            return new HttpException({
+                message: error.message,
+                data: error.type
+            }, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    return {
-        statusCode: HttpStatus.CREATED,
-        message: "Group created successfully",
-        data: groupId
-    };
-}
 
-@Get(':id')
-async findOne(@Param('id', ParseIntPipe) id: number) {
-    const response = await this.groupsService.getGroupData(id);
+
+    @Get(':id')
+    @ApiResponse({ status: 200, description: 'Group created successfully.' })
+    @ApiBadRequestResponse({
+        status: 400,
+        description: 'Invalid input parameters, validation failed.',
+    })
+    @ApiResponse({ status: 404, description: 'group not found.' })
+    @ApiInternalServerErrorResponse({ status: 500, description: 'Internal server error.' })
+    async findGroupById(@Param('id', ParseIntPipe) id: number) {
+        try {
+            const response = await this.groupsService.getGroupData(id);
+        
+            if (response) {
+                return {
+                    message: "Success",
+                    data: response
+                }; 
+            }
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            }
+            throw new HttpException('Internal Server Error', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        
+    }   
+
+    @Get('user/:userId')
+    @ApiResponse({ status: 200, description: 'Groups retrieved successfully.' })
+    @ApiResponse({ status: 404, description: 'User not found.' })
+    @ApiInternalServerErrorResponse({ status: 500, description: 'Internal server error.' })
+    async getAllGroups(@Param('userId', ParseIntPipe) userId: number) {
+        try {
+            const groups = await this.groupsService.getAllGroups(userId);
+            if (groups.length === 0) {
+                return {
+                    message: 'No groups found for this user.',
+                    data: groups,
+                };
+            }
     
-    if (response) {
-        return {
-            message: "Success",
-            data: response
-        }; 
+            return {
+                message: 'Success',
+                data: groups,
+            };
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            }
+            throw new HttpException('Internal Server Error', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    throw new HttpException({
-        message: "Group not found",
-        data: null
-    }, HttpStatus.NOT_FOUND);
-}   
+    @Delete(':groupId')
+    @ApiResponse({ status: 200, description: 'Group deleted successfully.' })
+    @ApiResponse({ status: 404, description: 'Group not found.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    async deleteGroup(@Param('groupId') groupId: number) {
+        try {
+            const response = await this.groupsService.deleteGroup(groupId);
+            return {
+                data : response
+            }
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            }
+            throw new HttpException('An unexpected error occurred while deleting the group', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Put(':id')
+    @ApiResponse({ status: 200, description: 'Group updated successfully.' })
+    @ApiResponse({ status: 404, description: 'Group not found.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    async updateGroup(@Param('id') id: number, @Body() updateGroupDto: UpdateGroupDto) {
+        const result = await this.groupsService.updateGroup(id, updateGroupDto);
+        return result;
+    }
 }
 
 
-// delete and update
+
