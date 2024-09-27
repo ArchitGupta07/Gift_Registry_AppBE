@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, ParseIntPipe, Post, Put, Version } from '@nestjs/common';
 import { GroupsService } from './groups.service';
 import { CreateGroupRelationDto, UpdateGroupDto } from './groups.dto';
 import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -11,6 +11,7 @@ export class GroupsController {
 constructor(private readonly groupsService : GroupsService){}
 
     @Post()
+    @Version('1')
     @ApiResponse({ status: 201, description: 'Group created successfully.' })
     @ApiBadRequestResponse({
         status: 400,
@@ -37,6 +38,7 @@ constructor(private readonly groupsService : GroupsService){}
 
 
     @Get(':id')
+    @Version('1')
     @ApiResponse({ status: 200, description: 'Group created successfully.' })
     @ApiBadRequestResponse({
         status: 400,
@@ -65,6 +67,7 @@ constructor(private readonly groupsService : GroupsService){}
     }   
 
     @Get('user/:userId')
+    @Version('1')
     @ApiResponse({ status: 200, description: 'Groups retrieved successfully.' })
     @ApiResponse({ status: 404, description: 'User not found.' })
     @ApiInternalServerErrorResponse({ status: 500, description: 'Internal server error.' })
@@ -91,6 +94,7 @@ constructor(private readonly groupsService : GroupsService){}
     }
 
     @Delete(':groupId')
+    @Version('1')
     @ApiResponse({ status: 200, description: 'Group deleted successfully.' })
     @ApiResponse({ status: 404, description: 'Group not found.' })
     @ApiResponse({ status: 500, description: 'Internal server error.' })
@@ -109,6 +113,7 @@ constructor(private readonly groupsService : GroupsService){}
     }
 
     @Put(':id')
+    @Version('1')
     @ApiResponse({ status: 200, description: 'Group updated successfully.' })
     @ApiResponse({ status: 404, description: 'Group not found.' })
     @ApiResponse({ status: 500, description: 'Internal server error.' })
