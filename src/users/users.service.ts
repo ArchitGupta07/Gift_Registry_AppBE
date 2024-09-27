@@ -24,6 +24,11 @@ export class UserService {
                 in: userIds,
             },
         },
+        select : {
+          id :true,
+          username : true,
+          email : true
+        }
     });
 
     if (users.length === 0) {

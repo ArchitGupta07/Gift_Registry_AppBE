@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, ParseIntPipe, Post, Put, Version } from '@nestjs/common';
 import { GroupsService } from './groups.service';
 import { CreateGroupRelationDto, UpdateGroupDto } from './groups.dto';
-import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('groups')
 @Controller('groups')
@@ -13,11 +13,9 @@ constructor(private readonly groupsService : GroupsService){}
     @Post()
     @Version('1')
     @ApiResponse({ status: 201, description: 'Group created successfully.' })
-    @ApiBadRequestResponse({
-        status: 400,
-        description: 'Invalid input, validation failed.',
-    })
+    @ApiBadRequestResponse({status: 400,description: 'Invalid input, validation failed.'})
     @ApiInternalServerErrorResponse({ status: 500, description: 'Internal server error.' })
+    @ApiOperation({ summary: 'create a new group' })
     async create(@Body() createGroupRelationDto: CreateGroupRelationDto) {
         try {
             const groupId = await this.groupsService.createGroup(createGroupRelationDto);
@@ -46,9 +44,10 @@ constructor(private readonly groupsService : GroupsService){}
     })
     @ApiResponse({ status: 404, description: 'group not found.' })
     @ApiInternalServerErrorResponse({ status: 500, description: 'Internal server error.' })
+    @ApiOperation({ summary: 'get a group by group id' })
     async findGroupById(@Param('id', ParseIntPipe) id: number) {
         try {
-            const response = await this.groupsService.getGroupData(id);
+            const response = await this.groupsService.getGroupById(id);
         
             if (response) {
                 return {
@@ -69,8 +68,10 @@ constructor(private readonly groupsService : GroupsService){}
     @Get('user/:userId')
     @Version('1')
     @ApiResponse({ status: 200, description: 'Groups retrieved successfully.' })
+    @ApiBadRequestResponse({status: 400,description: 'Invalid input, validation failed.'})
     @ApiResponse({ status: 404, description: 'User not found.' })
     @ApiInternalServerErrorResponse({ status: 500, description: 'Internal server error.' })
+    @ApiOperation({ summary: 'get all the groups for a user' })
     async getAllGroups(@Param('userId', ParseIntPipe) userId: number) {
         try {
             const groups = await this.groupsService.getAllGroups(userId);
@@ -96,8 +97,10 @@ constructor(private readonly groupsService : GroupsService){}
     @Delete(':groupId')
     @Version('1')
     @ApiResponse({ status: 200, description: 'Group deleted successfully.' })
+    @ApiBadRequestResponse({status: 400,description: 'Invalid input, validation failed.'})
     @ApiResponse({ status: 404, description: 'Group not found.' })
     @ApiResponse({ status: 500, description: 'Internal server error.' })
+    @ApiOperation({ summary: 'delete a group by group id' })
     async deleteGroup(@Param('groupId') groupId: number) {
         try {
             const response = await this.groupsService.deleteGroup(groupId);
@@ -115,8 +118,10 @@ constructor(private readonly groupsService : GroupsService){}
     @Put(':id')
     @Version('1')
     @ApiResponse({ status: 200, description: 'Group updated successfully.' })
+    @ApiBadRequestResponse({status: 400,description: 'Invalid input, validation failed.'})
     @ApiResponse({ status: 404, description: 'Group not found.' })
     @ApiResponse({ status: 500, description: 'Internal server error.' })
+    @ApiOperation({ summary: 'update a group by group id' })
     async updateGroup(@Param('id') id: number, @Body() updateGroupDto: UpdateGroupDto) {
         const result = await this.groupsService.updateGroup(id, updateGroupDto);
         return result;

@@ -1,7 +1,8 @@
-import { HttpException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { Prisma, Role } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateGroupRelationDto, UpdateGroupDto } from './groups.dto';
+import { UserService } from 'src/users/users.service';
 
 @Injectable()
 export class GroupsService {
@@ -41,8 +42,9 @@ export class GroupsService {
     }
 
 // this is the all the groups user have created, but we also need to show all the groups he is a member of
-
-    async getGroupData(groupId : number){
+    @Inject(UserService)
+    private readonly userService: UserService;
+    async getGroupById(groupId : number){
         try {
             const group = await this.databaseService.group.findFirst({
                 where : {
@@ -59,9 +61,14 @@ export class GroupsService {
                 }
             }) 
             const memberIds = membersData.map(memberData => memberData.userId);
-            // i need to get the user details here useing these memberIds
-            // const users : 
-            return group;
+            console.log(memberIds);
+            const users  = await this.userService.getUsersByIds(memberIds);
+            console.log(users);
+
+            return {
+                ...group,
+                members: users
+            };
         } catch (error) {
             return null;
         }
@@ -77,7 +84,6 @@ export class GroupsService {
         if (!userExists) {
             throw new HttpException('User not found', HttpStatus.NOT_FOUND);
         }
-        
         const groupData = await this.databaseService.userGroup.findMany({
             where : {
                 userId
@@ -91,10 +97,6 @@ export class GroupsService {
                     id : {
                         in : groupIds
                     }
-                },
-                select : {
-                    createdAt : false,
-                    updatedAt : false
                 }
             })
             return group;
