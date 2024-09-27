@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
-import { CreateEventDto } from './events.dto';
+import { CreateEventDto, UpdateEventDto } from './events.dto';
 
 @Injectable()
 export class EventsService {
@@ -87,5 +87,82 @@ if(!userEvents || userEvents.length===0){
       return [];
     }
   }
+
+  async deleteEvent(eventId : number){
+    const eventExists = await this.databaseService.event.findUnique({
+      where: { id: eventId },
+       });
+
+      if (!eventExists) {
+          throw new HttpException('Event not found', HttpStatus.NOT_FOUND);
+      }
+
+      await this.databaseService.userEvents.deleteMany({
+          where: { eventId },
+      });
+
+      await this.databaseService.event.delete({
+          where: { id: eventId },
+      });
+
+      return `Event with ID ${eventId} deleted successfully`;
+  }
+
+  async updateEvent(eventId: number, updateEventDto: UpdateEventDto) {
+    try {
+      const { eventName, description, organizers, members } = updateEventDto;
+  
+      const eventExists = await this.databaseService.event.findUnique({
+        where: { id: eventId },
+      });
+  
+      if (!eventExists) {
+        throw new HttpException('Event not found', HttpStatus.NOT_FOUND);
+      }
+  
+      const eventUpdateData: { eventName?: string; description?: string } = {};
+      if (eventName !== undefined) eventUpdateData.eventName = eventName;
+      if (description !== undefined) eventUpdateData.description = description;
+  
+      const updatedEvent = await this.databaseService.event.update({
+        where: { id: eventId },
+        data: eventUpdateData,
+      });
+  
+      if (organizers !== undefined || members !== undefined) {
+        await this.databaseService.userEvents.deleteMany({
+          where: { eventId },
+        });
+  
+        const userEvents = [
+          ...(organizers?.map((userId) => ({
+            userId,
+            eventId,
+            role: 'organizer',
+          })) || []),
+          ...(members?.map((userId) => ({
+            userId,
+            eventId,
+            role: 'member',
+          })) || []),
+        ];
+  
+        if (userEvents.length > 0) {
+          await this.databaseService.userEvents.createMany({
+            data: userEvents,
+          });
+        }
+      }
+  
+      return updatedEvent;
+    } catch (error) {
+      console.error('Error updating event:', error);
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException('Failed to update event', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
 }
 

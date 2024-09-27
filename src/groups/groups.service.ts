@@ -108,15 +108,12 @@ export class GroupsService {
 
 
     async deleteGroup(groupId: number): Promise<string> {
-        console.log(groupId)
         const groupExists = await this.databaseService.group.findUnique({
             where: { id: groupId },
         });
         console.log(groupExists);
 
         if (!groupExists) {
-        console.log("not found");
-
             throw new HttpException('Group not found', HttpStatus.NOT_FOUND);
         }
 

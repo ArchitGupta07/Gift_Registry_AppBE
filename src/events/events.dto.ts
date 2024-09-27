@@ -23,3 +23,26 @@ export class CreateEventDto {
     @IsNumber({}, { each: true })
     members: number[];
 }
+
+export class UpdateEventDto {
+    @IsOptional()
+    @IsString()
+    @IsNotEmpty()
+    eventName?: string;
+
+    @IsOptional()
+    @IsString()
+    description?: string;
+
+    @IsOptional()
+    @IsArray()
+    @ArrayNotEmpty()
+    @IsNumber({}, { each: true })
+    organizers?: number[];
+
+    @IsOptional()
+    @IsArray()
+    @ArrayNotEmpty()
+    @IsNumber({}, { each: true })
+    members?: number[];
+}
