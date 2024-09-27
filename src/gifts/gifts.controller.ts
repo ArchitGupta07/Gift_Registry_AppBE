@@ -11,6 +11,7 @@ import {
   Post,
   Query,
   Res,
+  Version,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { GiftsService } from './gifts.service';
@@ -31,6 +32,7 @@ export class GiftsController {
   constructor(private readonly giftsService: GiftsService) {}
 
   @Post()
+  @Version('1')
   @ApiOperation({ summary: 'Create a new gift' })
   @ApiBody({ type: CreateGiftDto })
   @ApiResponse({ status: 201, description: 'Gift successfully created.' })
@@ -52,6 +54,7 @@ export class GiftsController {
   }
 
   @Get('giftList/:registryId')
+  @Version('1')
   @ApiOperation({ summary: 'Retrieve all gifts for a specific registry' })
   @ApiParam({ name: 'registryId', type: Number })
   @ApiResponse({
@@ -76,6 +79,7 @@ export class GiftsController {
   }
 
   @Get(':id')
+  @Version('1')
   @ApiOperation({ summary: 'Retrieve a single gift by its ID' })
   @ApiParam({ name: 'id', type: Number })
   @ApiResponse({ status: 200, description: 'Gift retrieved successfully.' })
@@ -100,6 +104,7 @@ export class GiftsController {
   }
 
   @Patch(':id')
+  @Version('1')
   @ApiOperation({ summary: 'Update a gift by its ID' })
   @ApiParam({ name: 'id', type: Number })
   @ApiBody({ type: UpdateGiftDto })
@@ -129,6 +134,7 @@ export class GiftsController {
   }
 
   @Delete(':id')
+  @Version('1')
   @ApiOperation({ summary: 'Delete a gift by its ID' })
   @ApiParam({ name: 'id', type: Number })
   @ApiResponse({ status: 204, description: 'Gift deleted successfully.' })

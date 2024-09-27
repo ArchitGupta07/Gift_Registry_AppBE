@@ -13,13 +13,13 @@ export class UpdateRegistryDto {
   @ApiProperty({ description: 'The name of the registry', required: false })
   name?: string;
 
-  @IsOptional()
-  @IsNumber()
-  @ApiProperty({
-    description: 'The user ID associated with the registry',
-    required: false,
-  })
-  userId?: number;
+  //   @IsOptional()
+  //   @IsNumber()
+  //   @ApiProperty({
+  //     description: 'The user ID associated with the registry',
+  //     required: false,
+  //   })
+  //   userId?: number;
 
   @IsOptional()
   @IsNumber()

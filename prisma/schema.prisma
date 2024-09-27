@@ -22,7 +22,7 @@ model User {
   profilePic  String? 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
+  registeries Registry[] @relation("UserRegistry")
   
 }
 
@@ -71,16 +71,19 @@ model Registry{
   id Int @id @default(autoincrement())
   name String
   userId Int
+  user User @relation("UserRegistry",fields: [userId], references: [id], onDelete: Cascade)
   eventId Int @default(1)
   gifts Gift[] @relation("RegistryGifts")
+
 }
 
 model Gift{
   id Int @id @default(autoincrement())
   giftName String 
   giftUrl String  
+  price Int 
   registryId Int
-  registry Registry @relation("RegistryGifts",fields: [registryId], references: [id])
+  registry Registry @relation("RegistryGifts",fields: [registryId], references: [id], onDelete: Cascade)
   giftStatus Boolean @default(false)
 }
 

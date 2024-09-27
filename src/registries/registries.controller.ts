@@ -11,6 +11,7 @@ import {
   Patch,
   Post,
   Res,
+  Version,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
@@ -32,6 +33,7 @@ export class RegistriesController {
   constructor(private readonly registriesService: RegistriesService) {}
 
   @Post()
+  @Version('1')
   @ApiOperation({
     summary: 'Create a new registry',
     description: 'This API creates a new registry with the provided data.',
@@ -71,6 +73,7 @@ export class RegistriesController {
   }
 
   @Get('eventRegistry/:id')
+  @Version('1')
   @ApiOperation({
     summary: 'Find all registries by event ID',
     description: 'Fetch all registries associated with a particular event.',
@@ -100,6 +103,7 @@ export class RegistriesController {
   }
 
   @Get(':id')
+  @Version('1')
   @ApiOperation({
     summary: 'Find a registry by ID',
     description: 'Fetch a specific registry by its ID.',
@@ -129,6 +133,7 @@ export class RegistriesController {
   }
 
   @Patch(':id')
+  @Version('1')
   @ApiOperation({
     summary: 'Update a registry',
     description: 'Update the details of an existing registry.',
@@ -176,6 +181,7 @@ export class RegistriesController {
   }
 
   @Delete(':id')
+  @Version('1')
   @ApiOperation({
     summary: 'Delete a registry',
     description: 'Remove a registry by its ID.',

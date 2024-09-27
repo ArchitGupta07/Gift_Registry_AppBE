@@ -41,7 +41,7 @@ export class RegistriesService {
   }
 
   async remove(id: number) {
-    return this.databaseService.gift.delete({
+    return this.databaseService.registry.delete({
       where: {
         id,
       },
