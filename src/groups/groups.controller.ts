@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, ParseIntPipe, Post, Put, Version } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, ParseIntPipe, Patch, Post, Put, Version } from '@nestjs/common';
 import { GroupsService } from './groups.service';
 import { CreateGroupRelationDto, UpdateGroupDto } from './groups.dto';
 import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -115,7 +115,7 @@ constructor(private readonly groupsService : GroupsService){}
         }
     }
 
-    @Put(':id')
+    @Patch(':id')
     @Version('1')
     @ApiResponse({ status: 200, description: 'Group updated successfully.' })
     @ApiBadRequestResponse({status: 400,description: 'Invalid input, validation failed.'})

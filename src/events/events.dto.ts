@@ -1,23 +1,33 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsNumber, IsString, IsNotEmpty, ArrayNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateEventDto {
+    @ApiProperty()
     @IsNumber()
-    @IsNotEmpty() 
+    @IsNotEmpty()
     userId: number;
 
+    @ApiProperty()
     @IsString()
     @IsNotEmpty()
     eventName: string;
 
+    @ApiProperty()
     @IsString()
     @IsOptional()
-    description: string;
+    description?: string;
 
+    @ApiProperty({
+        type: [Number]
+    })
     @IsArray()
     @ArrayNotEmpty()
     @IsNumber({}, { each: true })
     organizers: number[];
 
+    @ApiProperty({
+        type: [Number]
+    })
     @IsArray()
     @ArrayNotEmpty()
     @IsNumber({}, { each: true })
@@ -25,21 +35,29 @@ export class CreateEventDto {
 }
 
 export class UpdateEventDto {
+    @ApiProperty()
     @IsOptional()
     @IsString()
     @IsNotEmpty()
     eventName?: string;
 
+    @ApiProperty()
     @IsOptional()
     @IsString()
     description?: string;
 
+    @ApiProperty({
+        type: [Number]
+    })
     @IsOptional()
     @IsArray()
     @ArrayNotEmpty()
     @IsNumber({}, { each: true })
     organizers?: number[];
 
+    @ApiProperty({
+        type: [Number],
+    })
     @IsOptional()
     @IsArray()
     @ArrayNotEmpty()
