@@ -29,6 +29,7 @@ export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
   @Post()
+  @Version('1')
   @ApiOperation({
     summary: 'Create a new event',
     description: 'Creates a new event with the provided details.',
@@ -60,6 +61,7 @@ export class EventsController {
   }
 
   @Get('user/:userId')
+  @Version('1')
   @ApiOperation({
     summary: 'Get events for a user',
     description: 'Fetches all events associated with a specific user ID.',
