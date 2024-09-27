@@ -1,62 +1,65 @@
 import { Controller, Get, UseGuards, Req, Res, HttpStatus } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
-import { authService } from './auth.service'; // Correct import statement
+import { AuthService } from './auth.service'; 
 import { AuthDto } from './dto/auth.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly AuthService: authService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
   @ApiOperation({ summary: 'Google OAuth2 login redirect' })
   @ApiResponse({ status: 302, description: 'Redirects to Google login page' })
   async googleAuth(@Req() req: Request) {
-    // Passport handles the redirection to Google's login page
+    
   }
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   @ApiOperation({
     summary: 'Google OAuth2 callback',
-    description: 'Handles the Google OAuth2 callback and redirects with user data.'
+    description: 'Handles the Google OAuth2 callback and redirects with user data.',
   })
   @ApiResponse({
     status: 302,
-    description: 'Redirects to the dashboard with user data in the query params.'
+    description: 'Redirects to the dashboard with user data in the query params.',
   })
   @ApiResponse({
     status: 500,
-    description: 'Internal server error if user creation fails.'
+    description: 'Internal server error if user creation fails.',
   })
   async googleAuthRedirect(@Req() req: any, @Res() res: Response) {
     try {
-      // Validate or create user
-      const userReq = req.user;
-      const user = await this.AuthService.ValidateOrCreateUser(
-        userReq.user.googleId,
-        userReq.user
+      const user = await this.authService.ValidateOrCreateUser(
+        req.user.googleId,
+        req.user,
       );
 
-      // Check if the user was created successfully
       if (!user) {
         throw new Error('User creation failed');
       }
 
-      // User data to send
       const userDto = new AuthDto(user);
-      
-      // Redirect URL with user data (Consider using sessions or JWT instead)
-      const redirectUrl = `http://localhost:3000/dashboard?user=${encodeURIComponent(JSON.stringify(userDto))}`;
-      console.log(userDto.profilePic, userDto.email, userDto.username);
-      
+      const redirectUrl = `${process.env.BASE_URL}/dashboard?user=${encodeURIComponent(
+        JSON.stringify(userDto),
+      )}`;
+
       res.redirect(redirectUrl);
     } catch (error) {
       console.error('Error handling Google callback:', error);
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).send('Internal Server Error');
     }
+  }
+
+  private generateJwtToken(user: any) {
+    const payload = { userId: user.id, username: user.username, email: user.email };
+    return this.authService.generateJwtToken(payload); 
   }
 }

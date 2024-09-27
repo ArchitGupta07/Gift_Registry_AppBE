@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateEventDto } from './events.dto';
 import { DatabaseService } from 'src/database/database.service';
+import { CreateEventDto } from './events.dto';
 
 @Injectable()
 export class EventsService {
@@ -84,3 +84,4 @@ export class EventsService {
     }
   }
 }
+

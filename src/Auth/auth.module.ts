@@ -1,15 +1,20 @@
 import { Module } from "@nestjs/common";
 import { AuthController } from "./Auth.controller";
-import { authService } from "./auth.service";
+import { AuthService } from "./auth.service";
 import { GoogleStrategies } from "./strategies/google.strategies";
 import { PassportModule } from "@nestjs/passport";
 import { DatabaseModule } from "src/database/database.module";
-
-
+import { UserModule } from "src/users/user.module"
+import { JwtModule } from "@nestjs/jwt";
+import * as dotenv from 'dotenv';
+dotenv.config();
 @Module({
-    imports: [PassportModule,DatabaseModule],
+    imports: [PassportModule,DatabaseModule , UserModule, JwtModule.register({
+        secret:process.env.JWT_SECRET, 
+        signOptions: { expiresIn: '1h' }, 
+      }),],
     controllers: [AuthController],
-    providers:[authService,GoogleStrategies],
+    providers:[AuthService,GoogleStrategies],
 })
 export class AuthModule
 {
