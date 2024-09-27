@@ -57,6 +57,10 @@ export class EventsService {
         },
       });
 
+if(!userEvents || userEvents.length===0){
+  return [];
+}
+
       const eventIds: number[] = userEvents.map(
         (event: { eventId: any }) => event.eventId,
       );
