@@ -1,7 +1,7 @@
 import { Controller, Get, Param, NotFoundException, Delete, ParseIntPipe, BadRequestException, Patch, Body } from '@nestjs/common';
 import { UserService } from './users.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
-
+import {UpdateUserDto} from './users.dto';
 @ApiTags('users')
 @Controller('users')
 export class UserController {
@@ -18,6 +18,21 @@ export class UserController {
       throw new NotFoundException('User not found');
     }
   }
+
+
+
+  @Get('email/:email')  
+  @ApiOperation({ summary: 'Get user by email' })
+  @ApiResponse({ status: 200, description: 'Returns the user details' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  async getUserByEmail(@Param('email') email: string) {
+    try {
+      return await this.userService.getUserByEmail(email);
+    } catch (error) {
+      throw new NotFoundException('User not found');
+    }
+  }
+  
 
   
   @ApiOperation({ summary: 'Delete a user by ID' })
@@ -45,6 +60,7 @@ export class UserController {
   @ApiParam({ name: 'id', required: true, description: 'User ID', type: Number })
   @ApiBody({
     description: 'Data to update user with',
+    type: UpdateUserDto,
     schema: {
       type: 'object',
       properties: {
@@ -62,7 +78,7 @@ export class UserController {
   @Patch(':id')
   async updateUser(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateData: any
+    @Body() updateData: UpdateUserDto
   ) {
     try {
       return await this.userService.updateUser(id, updateData);
