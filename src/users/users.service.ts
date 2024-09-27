@@ -17,6 +17,22 @@ export class UserService {
     return user;
   }
 
+  async getUsersByIds(userIds: number[]) {
+    const users = await this.databaseService.user.findMany({
+        where: {
+            id: {
+                in: userIds,
+            },
+        },
+    });
+
+    if (users.length === 0) {
+        throw new NotFoundException('Users not found');
+    }
+
+    return users;
+}
+
   async getUserByEmail(email: string) {
     const user = await this.databaseService.user.findUnique({
       where: { email: email },

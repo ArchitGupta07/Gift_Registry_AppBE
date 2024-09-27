@@ -134,7 +134,6 @@ export class GroupsService {
     async updateGroup(groupId: number, updateGroupDto: UpdateGroupDto) {
         const { groupName, description, memberIds } = updateGroupDto;
 
-        // Check if the group exists
         const groupExists = await this.databaseService.group.findUnique({
             where: { id: groupId },
         });
@@ -144,7 +143,6 @@ export class GroupsService {
         }
 
         try {
-            // Update group details
             const updatedGroup = await this.databaseService.group.update({
                 where: { id: groupId },
                 data: {
@@ -158,12 +156,11 @@ export class GroupsService {
                 },
             });
 
-            // Delete existing user-group relations for the group
+            // Deleting existing user-group relations for the group
             await this.databaseService.userGroup.deleteMany({
                 where: { groupId },
             });
 
-            // Re-insert updated user-group relations
             const userGroupRelation: Prisma.UserGroupCreateInput[] = [
                 ...memberIds.map((userId) => ({
                     userId,
@@ -181,7 +178,6 @@ export class GroupsService {
                 data: userGroupRelation,
             });
 
-            // Return the updated group details
             return {
                 message: 'Group updated successfully',
                 data: updatedGroup,
