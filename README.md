@@ -75,6 +75,8 @@ npm prism init
 
 # Prisma Installation
 
+```
 npm install prisma @prisma/client
 npx prisma init
 npx prisma migrate dev
+```
