@@ -15,7 +15,15 @@ import {
 import { Response } from 'express';
 import { GiftsService } from './gifts.service';
 import { Prisma } from '@prisma/client';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { CreateGiftDto } from './dto/createGiftDto';
+import { UpdateGiftDto } from './dto/updateGiftDto';
 
 @ApiTags('gifts')
 @Controller('gifts')
@@ -23,6 +31,10 @@ export class GiftsController {
   constructor(private readonly giftsService: GiftsService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a new gift' })
+  @ApiBody({ type: CreateGiftDto })
+  @ApiResponse({ status: 201, description: 'Gift successfully created.' })
+  @ApiResponse({ status: 500, description: 'Failed to create gift.' })
   async create(
     @Body() createGiftDto: Prisma.GiftCreateInput,
     @Res() res: Response,
@@ -40,6 +52,13 @@ export class GiftsController {
   }
 
   @Get('giftList/:registryId')
+  @ApiOperation({ summary: 'Retrieve all gifts for a specific registry' })
+  @ApiParam({ name: 'registryId', type: Number })
+  @ApiResponse({
+    status: 200,
+    description: 'Gift list retrieved successfully.',
+  })
+  @ApiResponse({ status: 500, description: 'Failed to retrieve gifts.' })
   async findAll(
     @Param('registryId', ParseIntPipe) registryId: number,
     @Res() res: Response,
@@ -57,6 +76,11 @@ export class GiftsController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Retrieve a single gift by its ID' })
+  @ApiParam({ name: 'id', type: Number })
+  @ApiResponse({ status: 200, description: 'Gift retrieved successfully.' })
+  @ApiResponse({ status: 404, description: 'Gift not found.' })
+  @ApiResponse({ status: 500, description: 'Failed to retrieve gift.' })
   async findOne(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
     try {
       const gift = await this.giftsService.findOne(id);
@@ -76,6 +100,12 @@ export class GiftsController {
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Update a gift by its ID' })
+  @ApiParam({ name: 'id', type: Number })
+  @ApiBody({ type: UpdateGiftDto })
+  @ApiResponse({ status: 200, description: 'Gift updated successfully.' })
+  @ApiResponse({ status: 404, description: 'Gift not found.' })
+  @ApiResponse({ status: 500, description: 'Failed to update gift.' })
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateGiftDto: Prisma.GiftUpdateInput,
@@ -99,6 +129,11 @@ export class GiftsController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete a gift by its ID' })
+  @ApiParam({ name: 'id', type: Number })
+  @ApiResponse({ status: 204, description: 'Gift deleted successfully.' })
+  @ApiResponse({ status: 404, description: 'Gift not found.' })
+  @ApiResponse({ status: 500, description: 'Failed to delete gift.' })
   async remove(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
     try {
       const deleted = await this.giftsService.remove(id);

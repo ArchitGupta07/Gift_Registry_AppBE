@@ -8,7 +8,7 @@ import {
   IsString,
 } from 'class-validator';
 
-class CreateGiftDto {
+export class CreateGiftDto {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({ description: 'The name of the gift' })
