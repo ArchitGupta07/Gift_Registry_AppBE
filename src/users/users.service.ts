@@ -17,6 +17,17 @@ export class UserService {
     return user;
   }
 
+  async getUserByEmail(email: string) {
+    const user = await this.databaseService.user.findUnique({
+      where: { email: email },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
+  }
 
   async deleteUser(userId: number) {
     const user = await this.getUserById(userId); 
