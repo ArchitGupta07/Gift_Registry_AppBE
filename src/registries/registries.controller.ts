@@ -72,7 +72,7 @@ export class RegistriesController {
     }
   }
 
-  @Get('eventRegistry/:id')
+  @Get('event-registry/:id')
   @Version('1')
   @ApiOperation({
     summary: 'Find all registries by event ID',
