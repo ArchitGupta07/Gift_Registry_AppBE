@@ -4,7 +4,7 @@ import { AuthService } from "./auth.service";
 import { GoogleStrategies } from "./strategies/google.strategies";
 import { PassportModule } from "@nestjs/passport";
 import { DatabaseModule } from "src/database/database.module";
-import { UserModule } from "src/users/user.module"
+import { UserModule } from "src/users/users.module"
 import { JwtModule } from "@nestjs/jwt";
 import * as dotenv from 'dotenv';
 dotenv.config();

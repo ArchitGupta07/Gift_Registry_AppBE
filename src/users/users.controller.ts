@@ -1,5 +1,5 @@
 import { Controller, Get, Param, NotFoundException, Delete, ParseIntPipe, BadRequestException, Patch, Body } from '@nestjs/common';
-import { UserService } from './user.service';
+import { UserService } from './users.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
 
 @ApiTags('users')
