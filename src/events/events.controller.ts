@@ -10,6 +10,7 @@ import {
   Patch,
   Post,
   Put,
+  Res,
   Version,
 } from '@nestjs/common';
 import { EventsService } from './events.service';
@@ -45,19 +46,17 @@ export class EventsController {
     description: 'Event creation failed',
   })
   async createEvent(@Body() createEventDTO: CreateEventDto) {
-    const event = await this.eventsService.createEvent(createEventDTO);
+      try {
+          const event = await this.eventsService.createEvent(createEventDTO);
 
-    if (event) {
-      return {
-        message: 'Event created Successfully',
-        data: event,
-      };
-    }
-
-    return {
-      message: 'Event creation failed',
-      data: -1,
-    };
+          return {
+              message: 'Event created successfully',
+              data: event,
+          };
+      } catch (error) {
+          console.error('Error in createEvent controller:', error);
+          throw new HttpException('Event creation failed', HttpStatus.INTERNAL_SERVER_ERROR);
+      }
   }
 
   @Get('user/:userId')
@@ -73,20 +72,29 @@ export class EventsController {
     status: 404,
     description: 'No events found for this user',
   })
-  async getEvents(@Param('userId', ParseIntPipe) userId: number) {
-    const events = await this.eventsService.getEvents(userId);
+  async getEvents(@Param('userId', ParseIntPipe) userId: number, @Res() res) {
+    try {
+        const events = await this.eventsService.getEvents(userId);
 
-    if (events.length > 0) {
-      return {
-        message: 'Events Fetched Successfully',
-        data: events,
-      };
+        if (events.length > 0) {
+            return res.status(HttpStatus.OK).json({
+                message: 'Events fetched successfully',
+                data: events,
+            });
+        }
+        
+        return res.status(HttpStatus.OK).json({
+            message: 'No events found for this user',
+            data: [],
+        });
+    } catch (error) {
+        if (error instanceof HttpException) {
+          throw error;
+      }
+        console.error('Error fetching events:', error);
+        throw new HttpException('Failed to fetch events', HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    return {
-      message: 'no events found for  this user',
-      data: [],
-    };
-  }
+}
 
   @Delete(':eventId')
   @Version('1')
