@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, Param, ParseIntPipe, Post, Version } from '@nestjs/common';
 import {EventsService} from './events.service';
 import { CreateEventDto } from './events.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('events')
 @Controller('events')
@@ -41,5 +41,50 @@ export class EventsController {
         }
 
     }
+
+    @Delete(':eventId')
+    @Version('1')
+    @ApiResponse({ status: 200, description: 'Event deleted successfully.' })
+    @ApiBadRequestResponse({status: 400,description: 'Invalid input, validation failed.'})
+    @ApiResponse({ status: 404, description: 'Event not found.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    @ApiOperation({ summary: 'Delete a event by event id' })
+    async deleteEvent(@Param('eventId') eventId: number) {
+        try {
+            const response = await this.eventsService.deleteEvent(eventId);
+            return {
+                data : response
+            }
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            }
+            throw new HttpException('An unexpected error occurred while deleting the group', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @Put(':eventId')
+    @Version('1')
+    @ApiResponse({ status: 200, description: 'Event deleted successfully.' })
+    @ApiBadRequestResponse({status: 400,description: 'Invalid input, validation failed.'})
+    @ApiResponse({ status: 404, description: 'Event not found.' })
+    @ApiResponse({ status: 500, description: 'Internal server error.' })
+    @ApiOperation({ summary: 'Delete a event by event id' })
+    async updateEvent(@Param('eventId') eventId: number) {
+        try {
+            const response = await this.eventsService.updateEvent(eventId);
+            return {
+                data : response
+            }
+        } catch (error) {
+            if (error instanceof HttpException) {
+                throw error;
+            }
+            throw new HttpException('An unexpected error occurred while deleting the group', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 
 }
