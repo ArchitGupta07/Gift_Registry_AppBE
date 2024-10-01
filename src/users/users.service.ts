@@ -1,9 +1,23 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
+import { v4 as uuidv4 } from 'uuid';
+import { CreateUserDto } from './dto/CreateUserDto';
 
 @Injectable()
 export class UserService {
   constructor(private readonly databaseService: DatabaseService) {}
+
+
+  async create(createUserDto: Prisma.UserCreateInput) {
+    return this.databaseService.user.create({
+      data: {
+        ...createUserDto,
+        googleId: `dummy-google-id-${uuidv4()}@example.com`,
+        
+      },
+    });
+  }
 
   async getUserById(userId: number) {
     const user = await this.databaseService.user.findUnique({

@@ -22,6 +22,7 @@ export class CreateEventDto {
     })
     @IsArray()
     @ArrayNotEmpty()
+    @IsOptional()
     @IsNumber({}, { each: true })
     organizers: number[];
 
@@ -30,6 +31,7 @@ export class CreateEventDto {
     })
     @IsArray()
     @ArrayNotEmpty()
+    @IsOptional()
     @IsNumber({}, { each: true })
     members: number[];
 }
