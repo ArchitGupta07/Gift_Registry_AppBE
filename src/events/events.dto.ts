@@ -21,7 +21,6 @@ export class CreateEventDto {
         type: [Number]
     })
     @IsArray()
-    @ArrayNotEmpty()
     @IsOptional()
     @IsNumber({}, { each: true })
     organizers: number[];
@@ -30,7 +29,6 @@ export class CreateEventDto {
         type: [Number]
     })
     @IsArray()
-    @ArrayNotEmpty()
     @IsOptional()
     @IsNumber({}, { each: true })
     members: number[];

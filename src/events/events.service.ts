@@ -34,16 +34,16 @@ export class EventsService {
             role:"organizer"
 
           },
-            ...organizers?.map((userId) => ({
-                userId,
-                eventId,
-                role: 'organizer',
-            })),
-            ...members?.map((userId) => ({
-                userId,
-                eventId,
-                role: 'member',
-            })),
+          ...organizers?.map((userId) => ({
+              userId,
+              eventId,
+              role: 'organizer',
+          })),
+          ...members?.map((userId) => ({
+              userId,
+              eventId,
+              role: 'member',
+          })),
         ];
 
         await this.databaseService.userEvents.createMany({
