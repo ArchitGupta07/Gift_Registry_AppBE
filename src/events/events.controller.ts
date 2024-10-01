@@ -77,7 +77,7 @@ export class EventsController {
   async getEvents(@Param('userId', ParseIntPipe) userId: number, @Res() res) {
     try {
         const events = await this.eventsService.getEvents(userId);
-        console.log("user events api called")
+        console.log("user events api called", events)
 
         if (events.length > 0) {
             return res.status(HttpStatus.OK).json({
