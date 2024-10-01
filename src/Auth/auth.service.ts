@@ -16,8 +16,6 @@ export class AuthService {
 
   async ValidateOrCreateUser(googleId: string, userDto: AuthDto) {
     try {
-      console.log(googleId);
-
       const user = await this.databaseService.user.findUnique({
         where: { googleId },
       });
@@ -25,6 +23,7 @@ export class AuthService {
       if (!user) {
         const newUser = await this.databaseService.user.create({
           data: {
+            
             googleId,
             username: userDto.username,
             email: userDto.email,

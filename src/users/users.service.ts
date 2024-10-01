@@ -38,9 +38,14 @@ export class UserService {
     return users;
 }
 
-  async getUserByEmail(email: string) {
-    const user = await this.databaseService.user.findUnique({
-      where: { email: email },
+
+
+  async getUserByEmailorUserName(identifier: string) {
+    const user = await this.databaseService.user.findFirst({
+      where: { OR: [
+        {email: identifier},
+        {username:identifier}
+      ] },
     });
 
     if (!user) {
@@ -60,6 +65,23 @@ export class UserService {
     return { message: 'User successfully deleted' };
   }
 
+
+
+  async getAllUsers() {
+    const users = await this.databaseService.user.findMany({
+      select: {
+        id: true,
+        username: true,
+        email: true,
+      },
+    });
+
+    if (users.length === 0) {
+      throw new NotFoundException('No users found');
+    }
+
+    return users;
+  }
 
 
 

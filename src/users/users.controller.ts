@@ -20,14 +20,26 @@ export class UserController {
   }
 
 
+  @Get()
+  @ApiOperation({summary:'Get all Users'})
+  @ApiResponse({status:200, description: 'Returns a list of all users'})
+  @ApiResponse({status:404, description: 'No users found'})
+  async getallUsers(){
+    try{
+      return await this.userService.getAllUsers();
+    }catch(error){
+      throw new NotFoundException('No users found');
+    }
+  }
 
-  @Get('email/:email')  
-  @ApiOperation({ summary: 'Get user by email' })
+
+  @Get('search/:identifier')  
+  @ApiOperation({ summary: 'Get user by email or Username' })
   @ApiResponse({ status: 200, description: 'Returns the user details' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  async getUserByEmail(@Param('email') email: string) {
+  async getUserByEmailorUserName(@Param('identifier') identifier: string) {
     try {
-      return await this.userService.getUserByEmail(email);
+      return await this.userService.getUserByEmailorUserName(identifier);
     } catch (error) {
       throw new NotFoundException('User not found');
     }

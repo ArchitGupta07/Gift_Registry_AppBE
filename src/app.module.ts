@@ -9,6 +9,7 @@ import { EventsModule } from './events/events.module';
 import { RegistriesModule } from './registries/registries.module';
 import { GroupsModule } from './groups/groups.module';
 import { ConfigModule } from '@nestjs/config';
+import { AiModule } from './ai/ai.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ConfigModule } from '@nestjs/config';
     EventsModule,
     RegistriesModule,
     GroupsModule,
+    AiModule,
   ],
   controllers: [AppController],
   providers: [AppService],
