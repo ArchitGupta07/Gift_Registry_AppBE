@@ -42,8 +42,10 @@ async function bootstrap() {
     .addTag('users')
     .build();
 
+  console.log(process.env.DATABASE_URL)
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
   await app.listen(`${process.env.PORT}`);
+  return app.getHttpServer();
 }
-bootstrap();
+export default bootstrap();

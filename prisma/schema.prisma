@@ -17,9 +17,9 @@ datasource db {
 model User {
   id Int @id @default(autoincrement())
   googleId    String   @unique
-  username    String?
-  email       String?  @unique
-  profilePic  String? 
+  username    String
+  email       String  @unique
+  profilePic  String?  @default("none")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   registeries Registry[] @relation("UserRegistry")

@@ -1,11 +1,41 @@
-import { Controller, Get, Param, NotFoundException, Delete, ParseIntPipe, BadRequestException, Patch, Body } from '@nestjs/common';
+import { Controller, Get, Param, NotFoundException, Delete, ParseIntPipe, BadRequestException, Patch, Body, Post, Version, Res, HttpStatus } from '@nestjs/common';
 import { UserService } from './users.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
 import {UpdateUserDto} from './users.dto';
+import { CreateUserDto } from './dto/CreateUserDto';
+import { Prisma } from '@prisma/client';
+import { Response } from 'express';
+
 @ApiTags('users')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+
+
+
+  @Post("login")
+  @Version('1')
+  @ApiOperation({ summary: 'Create a new User' })
+  @ApiBody({ type: CreateUserDto })
+  @ApiResponse({ status: 201, description: 'User successfully created.' })
+  @ApiResponse({ status: 500, description: 'Failed to create user.' })
+  async create(
+    @Body() creatUserDto: Prisma.UserCreateInput,
+    @Res() res: Response,
+  ) {
+    try {
+      console.log(creatUserDto)
+      const user = await this.userService.create(creatUserDto);
+      return res.status(HttpStatus.CREATED).json(user);
+    } catch (error) {
+      console.error(error);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: 'Failed to create gift',
+        error: error.message,
+      });
+    }
+  }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get user by ID' })
