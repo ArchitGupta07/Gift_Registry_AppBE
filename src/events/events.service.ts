@@ -27,12 +27,12 @@ export class EventsService {
         const eventId = event.id;
 
         const userEvents = [
-            ...organizers.map((userId) => ({
+            ...organizers?.map((userId) => ({
                 userId,
                 eventId,
                 role: 'organizer',
             })),
-            ...members.map((userId) => ({
+            ...members?.map((userId) => ({
                 userId,
                 eventId,
                 role: 'member',

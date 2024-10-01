@@ -20,7 +20,6 @@ constructor(private readonly groupsService : GroupsService){}
         try {
             const groupId = await this.groupsService.createGroup(createGroupRelationDto);
             return {
-                statusCode: HttpStatus.CREATED,
                 message: "Group created successfully",
                 data: groupId
         };
@@ -74,6 +73,7 @@ constructor(private readonly groupsService : GroupsService){}
     @ApiOperation({ summary: 'get all the groups for a user' })
     async getAllGroups(@Param('userId', ParseIntPipe) userId: number) {
         try {
+            console.log("incoming req")
             const groups = await this.groupsService.getAllGroups(userId);
             if (groups.length === 0) {
                 return {

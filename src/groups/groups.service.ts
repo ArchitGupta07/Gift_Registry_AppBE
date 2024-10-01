@@ -97,6 +97,12 @@ export class GroupsService {
                     id : {
                         in : groupIds
                     }
+                },
+                select : {
+                    id :  true,
+                    userId : true,
+                    groupName : true,
+                    description : true
                 }
             })
             return group;
