@@ -18,20 +18,22 @@ export class CreateEventDto {
     description?: string;
 
     @ApiProperty({
-        type: [Number]
+        type: [Number],
+        default: [],
     })
     @IsArray()
     @IsOptional()
     @IsNumber({}, { each: true })
-    organizers: number[];
+    organizers: number[] = [];
 
     @ApiProperty({
-        type: [Number]
+        type: [Number],
+        default: [],
     })
     @IsArray()
     @IsOptional()
     @IsNumber({}, { each: true })
-    members: number[];
+    members: number[] = [];
 }
 
 export class UpdateEventDto {
