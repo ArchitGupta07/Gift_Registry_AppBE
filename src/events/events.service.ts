@@ -25,8 +25,15 @@ export class EventsService {
         });
 
         const eventId = event.id;
+        console.log(createEvent)
 
         const userEvents = [
+          {
+            userId,
+            eventId,
+            role:"organizer"
+
+          },
             ...organizers?.map((userId) => ({
                 userId,
                 eventId,
