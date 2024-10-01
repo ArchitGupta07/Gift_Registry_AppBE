@@ -47,7 +47,7 @@ export class AuthController {
       }
 
       const userDto = new AuthDto(user);
-      const redirectUrl = `${process.env.BASE_URL}/dashboard?user=${encodeURIComponent(
+      const redirectUrl = `${process.env.FRONTEND_URL}/dashboard?user=${encodeURIComponent(
         JSON.stringify(userDto),
       )}`;
 
