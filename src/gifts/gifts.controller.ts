@@ -53,7 +53,7 @@ export class GiftsController {
     }
   }
 
-  @Get('giftList/:registryId')
+  @Get('gift-list/:registryId')
   @Version('1')
   @ApiOperation({ summary: 'Retrieve all gifts for a specific registry' })
   @ApiParam({ name: 'registryId', type: Number })
