@@ -49,12 +49,12 @@ export class AuthController {
       
       const userDto = new AuthDto(user);
     
-  
+  console.log(userDto);
       const redirectUrl = `${process.env.FRONTEND_URL}/dashboard?user=${encodeURIComponent(
         JSON.stringify(userDto),
       )}&token=${token}`;
   
-  
+     console.log(redirectUrl);
       res.redirect(redirectUrl);
     } catch (error) {
       console.error('Error handling Google callback:', error);
