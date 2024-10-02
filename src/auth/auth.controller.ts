@@ -37,20 +37,24 @@ export class AuthController {
   })
   async googleAuthRedirect(@Req() req: any, @Res() res: Response) {
     try {
-      const user = await this.authService.ValidateOrCreateUser(
+      const { user, token } = await this.authService.ValidateOrCreateUser(
         req.user.googleId,
         req.user,
       );
-
+  
       if (!user) {
         throw new Error('User creation failed');
       }
-
+  
+      
       const userDto = new AuthDto(user);
+    
+  console.log(userDto);
       const redirectUrl = `${process.env.FRONTEND_URL}/dashboard?user=${encodeURIComponent(
         JSON.stringify(userDto),
-      )}`;
-
+      )}&token=${token}`;
+  
+     console.log(redirectUrl);
       res.redirect(redirectUrl);
     } catch (error) {
       console.error('Error handling Google callback:', error);
@@ -58,8 +62,5 @@ export class AuthController {
     }
   }
 
-  private generateJwtToken(user: any) {
-    const payload = { userId: user.id, username: user.username, email: user.email };
-    return this.authService.generateJwtToken(payload); 
-  }
+ 
 }
