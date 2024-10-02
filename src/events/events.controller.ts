@@ -48,6 +48,7 @@ export class EventsController {
   })
   async createEvent(@Body() createEventDTO: CreateEventDto) {
       try {
+        console.log(createEventDTO)
           const event = await this.eventsService.createEvent(createEventDTO);
 
           return {

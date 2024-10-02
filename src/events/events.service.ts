@@ -7,13 +7,15 @@ export class EventsService {
   constructor(private readonly databaseService: DatabaseService) {}
 
   async createEvent(createEvent: CreateEventDto) {
+
+    
     try {
         const {
             userId,
             eventName,
             description,
-            organizers,
-            members,
+            organizers=[],
+            members=[],
         }: CreateEventDto = createEvent;
 
         const event = await this.databaseService.event.create({
