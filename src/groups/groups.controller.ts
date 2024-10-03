@@ -47,6 +47,7 @@ constructor(private readonly groupsService : GroupsService){}
     async findGroupById(@Param('id', ParseIntPipe) id: number) {
         try {
             const response = await this.groupsService.getGroupById(id);
+            console.log(response)
         
             if (response) {
                 return {
@@ -55,6 +56,7 @@ constructor(private readonly groupsService : GroupsService){}
                 }; 
             }
         } catch (error) {
+             console.log(error)
             if (error instanceof HttpException) {
                 throw error;
             }

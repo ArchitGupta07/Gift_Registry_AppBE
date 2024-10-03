@@ -1,4 +1,4 @@
-import { Controller, Get, Param, NotFoundException, Delete, ParseIntPipe, BadRequestException, Patch, Body, Post, Version, Res, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Param, NotFoundException, Delete, ParseIntPipe, BadRequestException, Patch, Body, Post, Version, Res, HttpStatus, Query } from '@nestjs/common';
 import { UserService } from './users.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
 import {UpdateUserDto} from './users.dto';
@@ -37,12 +37,25 @@ export class UserController {
     }
   }
 
-  @Get('all/:userId')
+  @Get('all')
   @ApiOperation({ summary: 'Get all users excluding the specified user' })
   @ApiResponse({ status: 200, description: 'Returns a list of users excluding the specified user' })
-  async fetchUsers(@Param('userId') userId: number) {
-    return await this.userService.findAll(userId);
+  async fetchUsers(@Res() res: Response, @Query('userId') userId?: number ) {
+    try {
+      let users;
+      if (userId) {
+        users = await this.userService.findAllExcluding(userId);
+      } else {
+        users = await this.userService.findAll(); 
+      }
+      return res.status(200).json(users); 
+    } catch (error) {
+      
+      console.error('Failed to fetch users:', error);
+      return res.status(500).json({ message: 'Internal Server Error', error: error.message });
+    }
   }
+
 
 
   @Get(':id')
