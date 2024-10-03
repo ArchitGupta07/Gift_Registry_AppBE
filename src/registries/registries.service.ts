@@ -40,6 +40,14 @@ export class RegistriesService {
     });
   }
 
+  async findByUserId(userId: number) {
+    return this.databaseService.registry.findMany({
+      where: {
+        userId: userId,  
+      },
+    });
+  }
+
   async remove(id: number) {
     return this.databaseService.registry.delete({
       where: {

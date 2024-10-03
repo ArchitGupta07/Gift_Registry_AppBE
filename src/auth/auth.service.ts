@@ -16,7 +16,7 @@ export class AuthService {
 
   async ValidateOrCreateUser(googleId: string, userDto: AuthDto) {
     try {
-      console.log(googleId);
+    
 
       const user = await this.databaseService.user.findUnique({
         where: { googleId },
@@ -54,5 +54,6 @@ export class AuthService {
       email: user.email,
     };
     return this.jwtService.sign(payload);
+  
   }
 }

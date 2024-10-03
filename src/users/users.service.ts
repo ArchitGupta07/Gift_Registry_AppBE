@@ -64,6 +64,8 @@ export class UserService {
     return user;
   }
 
+  
+  
   async deleteUser(userId: number) {
     const user = await this.getUserById(userId); 
 

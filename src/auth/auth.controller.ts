@@ -40,6 +40,7 @@ export class AuthController {
       const { user, token } = await this.authService.ValidateOrCreateUser(
         req.user.googleId,
         req.user,
+    
       );
   
       if (!user) {
