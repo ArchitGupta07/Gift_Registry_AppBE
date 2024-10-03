@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Registry" ALTER COLUMN "eventId" DROP NOT NULL,
+ALTER COLUMN "eventId" DROP DEFAULT;
