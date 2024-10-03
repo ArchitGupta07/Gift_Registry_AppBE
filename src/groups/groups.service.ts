@@ -70,6 +70,7 @@ export class GroupsService {
                 members: users
             };
         } catch (error) {
+            console.log(error)
             return null;
         }
     }

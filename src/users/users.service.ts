@@ -19,16 +19,18 @@ export class UserService {
     });
   }
 
-  async findAll(userId: number) {
-    if (userId)
-      return this.databaseService.user.findMany({
-        where: {id: {
-          not: userId, // Exclude the user with this ID
+  async findAll() {
+    return this.databaseService.user.findMany();
+  }
+
+  async findAllExcluding(userId: number) {
+    return this.databaseService.user.findMany({
+      where: {
+        id: {
+          not: userId,
         },
       },
-              });
-
-    
+    });
   }
 
   async getUserById(userId: number) {
