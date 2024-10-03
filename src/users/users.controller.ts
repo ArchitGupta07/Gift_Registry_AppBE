@@ -38,17 +38,19 @@ export class UserController {
   }
 
   @Get('all')
+  @Version('1')
   @ApiOperation({ summary: 'Get all users excluding the specified user' })
   @ApiResponse({ status: 200, description: 'Returns a list of users excluding the specified user' })
   @ApiQuery({ name: 'userId', required: false, description: 'The ID of the user to exclude' })
   async fetchUsers(@Res() res: Response, @Query('userId') userId?: number ) {
     try {
+      console.log("fetchUsers api hit")
       let users;
       if (userId) {
         users = await this.userService.findAllExcluding(userId);
       } else {
         users = await this.userService.findAll(); 
-      }
+      }console.log(users)
       return res.status(200).json(users); 
     } catch (error) {
       
