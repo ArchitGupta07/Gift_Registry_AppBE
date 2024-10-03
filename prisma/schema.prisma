@@ -72,7 +72,7 @@ model Registry{
   name String
   userId Int
   user User @relation("UserRegistry",fields: [userId], references: [id], onDelete: Cascade)
-  eventId Int @default(1)
+  eventId Int?
   gifts Gift[] @relation("RegistryGifts")
 
 }

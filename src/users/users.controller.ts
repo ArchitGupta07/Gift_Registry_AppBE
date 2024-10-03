@@ -37,6 +37,14 @@ export class UserController {
     }
   }
 
+  @Get('all/:userId')
+  @ApiOperation({ summary: 'Get all users excluding the specified user' })
+  @ApiResponse({ status: 200, description: 'Returns a list of users excluding the specified user' })
+  async fetchUsers(@Param('userId') userId: number) {
+    return await this.userService.findAll(userId);
+  }
+
+
   @Get(':id')
   @ApiOperation({ summary: 'Get user by ID' })
   @ApiResponse({ status: 200, description: 'Returns the user details' })

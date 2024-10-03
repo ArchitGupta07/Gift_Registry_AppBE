@@ -31,6 +31,14 @@ export class RegistriesService {
     });
   }
 
+  async findAllUserRegisteries(userId: number) {
+    return this.databaseService.registry.findMany({
+      where: {
+        userId,
+      },
+    });
+  }
+
   async update(id: number, updateRegistryDto: Prisma.RegistryUpdateInput) {
     return this.databaseService.registry.update({
       where: {

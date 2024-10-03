@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsNotEmpty,
@@ -21,7 +21,7 @@ export class CreateRegistryDto {
 
   @IsOptional()
   @IsNumber()
-  @ApiProperty({ description: 'The ID of the event', required: false })
+  @ApiPropertyOptional({ description: 'The ID of the event' ,default: null})
   eventId?: number;
 
   //   @IsOptional()

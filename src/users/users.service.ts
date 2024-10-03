@@ -19,6 +19,18 @@ export class UserService {
     });
   }
 
+  async findAll(userId: number) {
+    if (userId)
+      return this.databaseService.user.findMany({
+        where: {id: {
+          not: userId, // Exclude the user with this ID
+        },
+      },
+              });
+
+    
+  }
+
   async getUserById(userId: number) {
     const user = await this.databaseService.user.findUnique({
       where: { id: userId },

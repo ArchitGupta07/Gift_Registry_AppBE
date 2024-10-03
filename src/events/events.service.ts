@@ -52,7 +52,7 @@ export class EventsService {
             data: userEvents,
         });
 
-        return event;
+        return {...event,role:"organizer"};
     } catch (error) {
         console.error('Error creating event:', error);
         throw new HttpException('An error occurred while creating the event', HttpStatus.INTERNAL_SERVER_ERROR);

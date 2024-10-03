@@ -132,41 +132,36 @@ export class RegistriesController {
     }
   }
 
-
-  @Get('user/:userId')
+  @Get('user-registries/:userId')
   @Version('1')
   @ApiOperation({
-    summary: 'Find registries by user ID',
-    description: 'Fetch all registries created by the specified user ID.',
+    summary: 'Find all registries by User ID',
+    description: 'Fetch all registries createdv by a User by its UserId.',
   })
-  @ApiParam({ name: 'userId', type: Number, description: 'The user ID' })
+  @ApiParam({ name: 'userId', type: Number, description: 'The User ID' })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Returns the list of registries created by the given user ID.',
+    description: 'Returns the registries for the given User ID.',
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
-    description: 'No registries found for the provided user ID.',
+    description: 'Registries not found for the provided User ID.',
   })
-  async findByUserId(@Param('userId', ParseIntPipe) userId: number, @Res() res: Response) {
+  async findUserRegisteries(@Param('userId', ParseIntPipe) id: number, @Res() res: Response) {
     try {
-      const registries = await this.registriesService.findByUserId(userId);
-      if (registries.length === 0) {
-        return res.status(HttpStatus.NOT_FOUND).json({
-          message: 'No registries found for the provided user ID.',
-        });
+      const registries= await this.registriesService.findAllUserRegisteries(id);
+      if (!registries) {
+        throw new NotFoundException('Registries not found for this User');
       }
+      console.log("finding user registeries ", registries)
       return res.status(HttpStatus.OK).json(registries);
     } catch (error) {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        message: 'Failed to find registries due to server error',
+        message: 'Failed to Find registries due to server error',
         error: error.message,
       });
     }
   }
-  
-
-
 
   @Patch(':id')
   @Version('1')
