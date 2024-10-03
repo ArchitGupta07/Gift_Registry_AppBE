@@ -20,7 +20,14 @@ export class UserService {
   }
 
   async findAll() {
-    return this.databaseService.user.findMany();
+    return this.databaseService.user.findMany({
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        profilePic: true,
+      },
+    });
   }
 
   async findAllExcluding(userId: number) {
@@ -29,6 +36,12 @@ export class UserService {
         id: {
           not: userId,
         },
+      },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        profilePic: true,
       },
     });
   }

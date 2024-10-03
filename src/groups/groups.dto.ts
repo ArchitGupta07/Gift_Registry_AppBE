@@ -18,7 +18,10 @@ export class CreateGroupRelationDto{
     @IsString()
     description: string;
 
-    @ApiProperty()
+    @ApiProperty({
+        type: [Number],
+        default: [],
+    })
     @IsArray()
     @IsOptional() 
     @IsNumber({}, { each: true })
