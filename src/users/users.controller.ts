@@ -1,6 +1,6 @@
 import { Controller, Get, Param, NotFoundException, Delete, ParseIntPipe, BadRequestException, Patch, Body, Post, Version, Res, HttpStatus, Query } from '@nestjs/common';
 import { UserService } from './users.service';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiQuery } from '@nestjs/swagger';
 import {UpdateUserDto} from './users.dto';
 import { CreateUserDto } from './dto/CreateUserDto';
 import { Prisma } from '@prisma/client';
@@ -40,6 +40,7 @@ export class UserController {
   @Get('all')
   @ApiOperation({ summary: 'Get all users excluding the specified user' })
   @ApiResponse({ status: 200, description: 'Returns a list of users excluding the specified user' })
+  @ApiQuery({ name: 'userId', required: false, description: 'The ID of the user to exclude' })
   async fetchUsers(@Res() res: Response, @Query('userId') userId?: number ) {
     try {
       let users;
