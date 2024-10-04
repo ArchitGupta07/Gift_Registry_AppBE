@@ -130,7 +130,7 @@ constructor(private readonly groupsService : GroupsService){}
   ) {
     try {
       const result = await this.groupsService.updateGroup(groupId, updateGroupDto);
-
+        console.log("group updated successfully")
       return {
         message: 'Group updated successfully',
         data: result.data,
