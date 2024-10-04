@@ -72,11 +72,11 @@ export class UserService {
         }
     });
 
-    if (users.length === 0) {
-        throw new NotFoundException('Users not found');
-    }
+    // if (users.length === 0) {
+    //     throw new NotFoundException('Users not found');
+    // }
 
-    return users;
+    return users.length > 0 ? users : [];
 }
 
   async getUserByEmail(email: string) {

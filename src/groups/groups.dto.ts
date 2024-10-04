@@ -28,20 +28,32 @@ export class CreateGroupRelationDto{
     memberIds? : number[];
 }
 
+
+
 export class UpdateGroupDto {
-    @ApiProperty()
-    @IsString()
-    groupName: string;
-
-    @ApiProperty()
-    @IsString()
+  
+    // @IsOptional()
+    // @IsNumber()
+    // @ApiProperty({ description: 'The ID of the group to update', required: false })
+    // groupId?: number;
+    
     @IsOptional()
+    @IsString()
+    @ApiProperty({ description: 'The new name of the group', required: false })
+    groupName?: string;
+    
+    @IsOptional()
+    @IsString()
+    @ApiProperty({ description: 'The new description of the group', required: false })
     description?: string;
-
-    @ApiProperty({
-        type: [Number],
-    })
+    
+    @IsOptional()
     @IsArray()
-    @IsNumber({}, { each: true })
-    memberIds: number[];
-}
+    @ApiProperty({ description: 'The new members added to the group', required: false, type: [Number] })
+    newMembers?: number[];
+    
+    @IsOptional()
+    @IsArray()
+    @ApiProperty({ description: 'The old members to be removed from the group', required: false, type: [Number] })
+    removedMembers?: number[];
+  }

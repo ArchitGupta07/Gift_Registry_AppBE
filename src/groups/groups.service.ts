@@ -44,40 +44,44 @@ export class GroupsService {
 // this is the all the groups user have created, but we also need to show all the groups he is a member of
     @Inject(UserService)
     private readonly userService: UserService;
-    async getGroupById(groupId : number){
+    async getGroupById(groupId: number) {
         try {
-            const group = await this.databaseService.group.findFirst({
-                where : {
-                    id : groupId
-                }
-            })
-            if (!group) {
-                // No group was found
-                throw new HttpException('Group not found', HttpStatus.NOT_FOUND);
-            }            
-            const membersData = await this.databaseService.userGroup.findMany({
-                where : {
-                    groupId
-                }
-            }) 
-            const memberIds = membersData.map(memberData => memberData.userId);
-            console.log(memberIds);
-            const users  = await this.userService.getUsersByIds(memberIds);
-            console.log(users);
+          // Find the group by ID
+          const group = await this.databaseService.group.findFirst({
+            where: {
+              id: groupId,
+            },
+          });
+      
+          if (!group) {
+            throw new HttpException('Group not found', HttpStatus.NOT_FOUND);
+          }
+      
+          const membersData = await this.databaseService.userGroup.findMany({
+            where: {
+              groupId,
+            },
+          });
 
-            return {
-                ...group,
-                members: users
-            };
+
+      
+          const memberIds = membersData.map((memberData) => memberData.userId);
+          console.log("member ids",memberIds);
+      
+          const users = memberIds.length > 0 ? await this.userService.getUsersByIds(memberIds) : [];
+          console.log(users);
+      
+          return {
+            ...group,
+            members: users,
+          };
         } catch (error) {
-            console.log(error)
-            return null;
+          console.log(error);
+          return null;
         }
-    }
+      }
 
-    // get all the groups for a user
     async getAllGroups(userId : number){
-        // for this user id get all the group he is a member in and all the groups he is owner of
         const userExists = await this.databaseService.user.findUnique({
             where: { id: userId }
         });
@@ -108,7 +112,7 @@ export class GroupsService {
             })
             return group;
         }
-        // no groups exists for the user
+        
         return [];
     }
 
@@ -135,55 +139,59 @@ export class GroupsService {
         return `Group with ID ${groupId} deleted successfully`;
     }
 
-    // update a group
+    
 
     async updateGroup(groupId: number, updateGroupDto: UpdateGroupDto) {
-        const { groupName, description, memberIds } = updateGroupDto;
-
+        const { groupName, description, newMembers, removedMembers } = updateGroupDto;
+    
+      
         const groupExists = await this.databaseService.group.findUnique({
             where: { id: groupId },
         });
-
+    
         if (!groupExists) {
             throw new NotFoundException(`Group with ID ${groupId} not found`);
         }
-
+    
         try {
+            // Update group details if the groupName or description is provided
             const updatedGroup = await this.databaseService.group.update({
                 where: { id: groupId },
                 data: {
-                    groupName,
-                    description,
+                    groupName: groupName ?? groupExists.groupName, // Only update if provided
+                    description: description ?? groupExists.description, // Only update if provided
                 },
                 select: {
                     id: true,
+                    userId: true,
                     groupName: true,
                     description: true,
                 },
             });
-
-            // Deleting existing user-group relations for the group
-            await this.databaseService.userGroup.deleteMany({
-                where: { groupId },
-            });
-
-            const userGroupRelation: Prisma.UserGroupCreateInput[] = [
-                ...memberIds.map((userId) => ({
+    
+            // Remove members if removedMembers array is provided
+            if (removedMembers && removedMembers.length > 0) {
+                await this.databaseService.userGroup.deleteMany({
+                    where: {
+                        groupId,
+                        userId: { in: removedMembers },
+                    },
+                });
+            }
+    
+            // Add new members if newMembers array is provided
+            if (newMembers && newMembers.length > 0) {
+                const userGroupRelation: Prisma.UserGroupCreateInput[] = newMembers.map((userId) => ({
                     userId,
-                    groupId,
-                    role: Role.MEMBER,
-                })),
-                {
-                    userId: updatedGroup.id,
                     groupId: updatedGroup.id,
-                    role: Role.OWNER,
-                },
-            ];
-
-            await this.databaseService.userGroup.createMany({
-                data: userGroupRelation,
-            });
-
+                    role: Role.MEMBER,
+                }));
+    
+                await this.databaseService.userGroup.createMany({
+                    data: userGroupRelation,
+                });
+            }
+    
             return {
                 message: 'Group updated successfully',
                 data: updatedGroup,
