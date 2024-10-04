@@ -129,7 +129,7 @@ export class EventsController {
 
   @Patch(':eventId')
   @Version('1')
-  @ApiResponse({ status: 200, description: 'Event deleted successfully.' })
+  @ApiResponse({ status: 200, description: 'Event updated successfully.' })
   @ApiBadRequestResponse({
     status: 400,
     description: 'Invalid input, validation failed.',
