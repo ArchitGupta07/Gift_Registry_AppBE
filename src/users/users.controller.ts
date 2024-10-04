@@ -62,6 +62,7 @@ export class UserController {
 
 
   @Get(':id')
+  @Version('1')
   @ApiOperation({ summary: 'Get user by ID' })
   @ApiResponse({ status: 200, description: 'Returns the user details' })
   @ApiResponse({ status: 404, description: 'User not found' })
@@ -76,6 +77,7 @@ export class UserController {
 
 
   @Get('email/:email')  
+  @Version('1')
   @ApiOperation({ summary: 'Get user by email' })
   @ApiResponse({ status: 200, description: 'Returns the user details' })
   @ApiResponse({ status: 404, description: 'User not found' })
@@ -96,6 +98,7 @@ export class UserController {
   @ApiResponse({ status: 400, description: 'Invalid ID provided.' })
   @ApiResponse({ status: 500, description: 'Internal server error.' })
   @Delete(':id')
+  @Version('1')
   async deleteUser(@Param('id', ParseIntPipe) id: number) {
     try {
       return await this.userService.deleteUser(id);
@@ -130,6 +133,7 @@ export class UserController {
   @ApiResponse({ status: 400, description: 'Invalid update data or user ID provided.' })
   @ApiResponse({ status: 500, description: 'Internal server error.' })
   @Patch(':id')
+  @Version('1')
   async updateUser(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateData: UpdateUserDto
