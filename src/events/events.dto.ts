@@ -24,6 +24,11 @@ export class CreateEventDto {
     eventType?: EventType;
 
     @ApiProperty()
+    @IsString()
+    @IsOptional()
+    venue?: string;
+
+    @ApiProperty()
     @IsNumber()
     @IsOptional()
     groupId: number;

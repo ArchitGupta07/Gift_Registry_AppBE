@@ -14,6 +14,7 @@ export class EventsService {
             userId,
             eventName,
             description,
+            venue,
             eventType,
             groupId
             // organizers=[],
@@ -25,6 +26,7 @@ export class EventsService {
                 userId: userId,
                 eventName,
                 description,
+                venue,
                 sharedGroup : groupId,
                 eventType
             },
@@ -72,6 +74,11 @@ async getEvents(userId: number) {
       console.log("user not found")
         throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
+    const userGroups = await this.databaseService.userGroup.findMany({
+      where : {
+        
+      }
+    })
       const userEvents = await this.databaseService.userEvents.findMany({
           where: {
               userId,
