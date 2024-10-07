@@ -1,10 +1,11 @@
-import { Controller, Get, Param, NotFoundException, Delete, ParseIntPipe, BadRequestException, Patch, Body, Post, Version, Res, HttpStatus, Query } from '@nestjs/common';
+import { Controller, Get, Param, NotFoundException, Delete, ParseIntPipe, BadRequestException, UnauthorizedException,Patch, Body, Post, Version, Res, HttpStatus, Query } from '@nestjs/common';
 import { UserService } from './users.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiQuery } from '@nestjs/swagger';
 import {UpdateUserDto} from './users.dto';
 import { CreateUserDto } from './dto/CreateUserDto';
 import { Prisma } from '@prisma/client';
 import { Response } from 'express';
+import { UserLoginDto } from './dto/UserLoginDto';
 
 @ApiTags('users')
 @Controller('users')
@@ -14,7 +15,7 @@ export class UserController {
 
 
 
-  @Post("login")
+  @Post("signup")
   @Version('1')
   @ApiOperation({ summary: 'Create a new User' })
   @ApiBody({ type: CreateUserDto })
@@ -34,6 +35,45 @@ export class UserController {
         message: 'Failed to create gift',
         error: error.message,
       });
+    }
+  }
+
+
+  @Post('login')
+  @Version("1")
+  @ApiOperation({ summary: 'Retrieve all users excluding a specific user' })
+@ApiResponse({ 
+  status: 200, 
+  description: 'A successful response that returns a list of users excluding the specified user.' 
+})
+@ApiResponse({ 
+  status: 404, 
+  description: 'No users found.' 
+})
+@ApiBody({ type: UserLoginDto })
+
+  async login(@Body() body: any, @Res() res: Response) {
+    const { email, password } = body;
+
+    console.log(email)
+
+    try {
+      const user = await this.userService.getUserByEmail(email);
+      console.log(user)
+      if (!user) {
+        throw new UnauthorizedException('Invalid credentials');
+      }
+  
+  
+      // const { password: _, ...userData } = user; 
+      const {...userData} = user
+      return res.status(HttpStatus.OK).json(userData);
+    } catch (error) {
+      
+      if (error instanceof UnauthorizedException) {
+        return res.status(HttpStatus.UNAUTHORIZED).json({ message: error.message });
+      }
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: 'An error occurred' });
     }
   }
 

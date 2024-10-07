@@ -19,6 +19,8 @@ export class UserService {
     });
   }
 
+
+
   async findAll() {
     return this.databaseService.user.findMany({
       select: {
@@ -48,7 +50,16 @@ export class UserService {
 
   async getUserById(userId: number) {
     const user = await this.databaseService.user.findUnique({
-      where: { id: userId },
+      where: {
+        id:userId
+        
+      },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        profilePic: true,
+      },
     });
 
     if (!user) {
@@ -82,9 +93,16 @@ export class UserService {
   async getUserByEmail(email: string) {
     const user = await this.databaseService.user.findUnique({
       where: { email: email },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        profilePic: true,
+      },
     });
 
     if (!user) {
+      console.log("user not found")
       throw new NotFoundException('User not found');
     }
 
