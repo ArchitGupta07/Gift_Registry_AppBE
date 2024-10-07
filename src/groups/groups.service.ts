@@ -60,6 +60,7 @@ export class GroupsService {
           const membersData = await this.databaseService.userGroup.findMany({
             where: {
               groupId,
+              role : Role.MEMBER
             },
           });
 
