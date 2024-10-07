@@ -77,7 +77,7 @@ async getEvents(userId: number) {
     }
     const userGroups = await this.databaseService.userGroup.findMany({
       where : {
-        userId:userId,
+        userId,
         role:"MEMBER"
       },
       select: {
@@ -87,6 +87,7 @@ async getEvents(userId: number) {
     })
 
     const groupIds = userGroups.map(group => group.groupId);
+    console.log("gids----------->" +groupIds)
     const invitedEvents  = await this.databaseService.event.findMany({
       where : {
         sharedGroup : {
@@ -101,13 +102,15 @@ async getEvents(userId: number) {
     })
     const invitedEventsWithRole = invitedEvents.map(event => ({
       ...event,
-      role: 'member'
+      role: 'MEMBER'
     }));
+    console.log(invitedEvents);
     
     const organizedEventsWithRole = organizedEvents.map(event => ({
       ...event,
-      role: 'organizer'
+      role: 'ORGANIZER'
     }));
+    console.log(organizedEvents);
     
     const allEvents = [
       ...invitedEventsWithRole,
