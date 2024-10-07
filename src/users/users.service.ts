@@ -13,7 +13,7 @@ export class UserService {
     return this.databaseService.user.create({
       data: {
         ...createUserDto,
-        googleId: `dummy-google-id-${uuidv4()}@example.com`,
+        password: `dummy-google-id-${uuidv4()}@example.com`,
         
       },
     });

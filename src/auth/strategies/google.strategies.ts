@@ -28,7 +28,7 @@ async validate(
     const {id,name,emails,photos} = profile;
     const user ={
         providerId: id,
-        googleId: profile.id,
+        password: profile.id,
         username: `${name.givenName }`,
         email: emails[0].value,
         profilePic: photos[0].value,

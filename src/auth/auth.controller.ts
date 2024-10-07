@@ -38,7 +38,7 @@ export class AuthController {
   async googleAuthRedirect(@Req() req: any, @Res() res: Response) {
     try {
       const { user, token } = await this.authService.ValidateOrCreateUser(
-        req.user.googleId,
+        req.user.password,
         req.user,
     
       );

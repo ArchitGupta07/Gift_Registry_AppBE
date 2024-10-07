@@ -14,18 +14,18 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async ValidateOrCreateUser(googleId: string, userDto: AuthDto) {
+  async ValidateOrCreateUser(password: string, userDto: AuthDto) {
     try {
     
 
       const user = await this.databaseService.user.findUnique({
-        where: { googleId },
+        where: { password },
       });
 
       if (!user) {
         const newUser = await this.databaseService.user.create({
           data: {
-            googleId,
+            password,
             username: userDto.username,
             email: userDto.email,
             profilePic: userDto.profilePic,

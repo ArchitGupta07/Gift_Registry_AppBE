@@ -14,12 +14,28 @@ datasource db {
 }
 
 
+enum AuthType {
+  google
+  facebook
+  form
+}
+
+enum EventType {
+  BIRTHDAY
+  WEDDING
+  ANNIVERSARY
+  BABY_SHOWER
+  OTHER
+}
+
 model User {
   id Int @id @default(autoincrement())
-  googleId    String   @unique
+  password    String   @unique
   username    String
   email       String  @unique
+  //password    String?  @default("none")
   profilePic  String?  @default("none")
+  authType    AuthType @default(google)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   registeries Registry[] @relation("UserRegistry")
@@ -27,14 +43,13 @@ model User {
 }
 
 
-model Group{
-  id Int @id @default(autoincrement())
-  userId Int
-  groupName String
+model Group {
+  id          Int     @id @default(autoincrement())
+  userId      Int
+  groupName   String
   description String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  
 }
 
 enum Role {
@@ -51,13 +66,16 @@ model UserGroup {
 }
 
 
-model Event{
-  id Int @id @default(autoincrement())
-  userId Int
-  eventName String
+model Event {
+  id          Int     @id @default(autoincrement())
+  userId      Int
+  eventName   String
   description String
+  eventType   EventType  @default(OTHER)
+  sharedGroup Int?     @default(-1)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  
 }
 
 model UserEvents{

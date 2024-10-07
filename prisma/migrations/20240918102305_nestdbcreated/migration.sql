@@ -1,7 +1,7 @@
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
-    "googleId" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
     "username" TEXT,
     "email" TEXT,
     "profilePic" TEXT,
@@ -54,7 +54,7 @@ CREATE TABLE "Gift" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_googleId_key" ON "User"("googleId");
+CREATE UNIQUE INDEX "User_password_key" ON "User"("password");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
