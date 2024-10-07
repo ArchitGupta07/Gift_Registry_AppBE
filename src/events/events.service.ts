@@ -14,6 +14,7 @@ export class EventsService {
             userId,
             eventName,
             description,
+            eventType,
             organizers=[],
             members=[],
         }: CreateEventDto = createEvent;
@@ -23,6 +24,7 @@ export class EventsService {
                 userId: userId,
                 eventName,
                 description,
+                eventType
             },
         });
 

@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { EventType } from '@prisma/client';
 import { IsArray, IsNumber, IsString, IsNotEmpty, ArrayNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateEventDto {
@@ -16,6 +17,11 @@ export class CreateEventDto {
     @IsString()
     @IsOptional()
     description?: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    eventType?: EventType;
 
     @ApiProperty({
         type: [Number],
