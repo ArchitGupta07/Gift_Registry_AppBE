@@ -15,8 +15,9 @@ export class EventsService {
             eventName,
             description,
             eventType,
-            organizers=[],
-            members=[],
+            groupId
+            // organizers=[],
+            // members=[],
         }: CreateEventDto = createEvent;
 
         const event = await this.databaseService.event.create({
@@ -24,6 +25,7 @@ export class EventsService {
                 userId: userId,
                 eventName,
                 description,
+                sharedGroup : groupId,
                 eventType
             },
         });
@@ -31,28 +33,28 @@ export class EventsService {
         const eventId = event.id;
         console.log(createEvent)
 
-        const userEvents = [
-          {
-            userId,
-            eventId,
-            role:"organizer"
+        // const userEvents = [
+        //   {
+        //     userId,
+        //     eventId,
+        //     role:"organizer"
 
-          },
-          ...organizers?.map((userId) => ({
-              userId,
-              eventId,
-              role: 'organizer',
-          })),
-          ...members?.map((userId) => ({
-              userId,
-              eventId,
-              role: 'member',
-          })),
-        ];
+        //   },
+        //   ...organizers?.map((userId) => ({
+        //       userId,
+        //       eventId,
+        //       role: 'organizer',
+        //   })),
+        //   ...members?.map((userId) => ({
+        //       userId,
+        //       eventId,
+        //       role: 'member',
+        //   })),
+        // ];
 
-        await this.databaseService.userEvents.createMany({
-            data: userEvents,
-        });
+        // await this.databaseService.userEvents.createMany({
+        //     data: userEvents,
+        // });
 
         return {...event,role:"organizer"};
     } catch (error) {

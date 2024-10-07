@@ -23,23 +23,28 @@ export class CreateEventDto {
     @IsOptional()
     eventType?: EventType;
 
-    @ApiProperty({
-        type: [Number],
-        default: [],
-    })
-    @IsArray()
+    @ApiProperty()
+    @IsNumber()
     @IsOptional()
-    @IsNumber({}, { each: true })
-    organizers: number[] = [];
+    groupId: number;
 
-    @ApiProperty({
-        type: [Number],
-        default: [],
-    })
-    @IsArray()
-    @IsOptional()
-    @IsNumber({}, { each: true })
-    members: number[] = [];
+    // @ApiProperty({
+    //     type: [Number],
+    //     default: [],
+    // })
+    // @IsArray()
+    // @IsOptional()
+    // @IsNumber({}, { each: true })
+    // organizers: number[] = [];
+
+    // @ApiProperty({
+    //     type: [Number],
+    //     default: [],
+    // })
+    // @IsArray()
+    // @IsOptional()
+    // @IsNumber({}, { each: true })
+    // members: number[] = [];
 }
 
 export class UpdateEventDto {
