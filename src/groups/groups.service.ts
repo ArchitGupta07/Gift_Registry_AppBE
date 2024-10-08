@@ -3,6 +3,7 @@ import { Prisma, Role } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateGroupRelationDto, UpdateGroupDto } from './groups.dto';
 import { UserService } from 'src/users/users.service';
+import { use } from 'passport';
 
 @Injectable()
 export class GroupsService {
@@ -142,6 +143,8 @@ export class GroupsService {
     
 
     async updateGroup(groupId: number, updateGroupDto: UpdateGroupDto) {
+        console.log('in service')
+        console.log(groupId,updateGroupDto)
         const { groupName, description, newMembers, removedMembers } = updateGroupDto;
     
       

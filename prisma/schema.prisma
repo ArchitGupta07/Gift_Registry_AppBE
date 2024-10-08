@@ -72,6 +72,7 @@ model Event {
   eventName   String
   description String
   eventType   EventType  @default(OTHER)
+  venue       String? @default("none")
   sharedGroup Int?     @default(-1)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

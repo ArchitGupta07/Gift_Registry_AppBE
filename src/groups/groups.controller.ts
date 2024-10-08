@@ -126,6 +126,8 @@ constructor(private readonly groupsService : GroupsService){}
     @Param('id') groupId: number,
     @Body() updateGroupDto: UpdateGroupDto,
   ) {
+    console.log('in service')
+    console.log(groupId,updateGroupDto)
     try {
       const result = await this.groupsService.updateGroup(groupId, updateGroupDto);
         console.log("group updated successfully")

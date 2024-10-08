@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateEventDto, UpdateEventDto } from './events.dto';
+import { group } from 'console';
 
 @Injectable()
 export class EventsService {
@@ -14,8 +15,11 @@ export class EventsService {
             userId,
             eventName,
             description,
-            organizers=[],
-            members=[],
+            venue="NA",
+            eventType,
+            groupId=1
+            // organizers=[],
+            // members=[],
         }: CreateEventDto = createEvent;
 
         const event = await this.databaseService.event.create({
@@ -23,36 +27,39 @@ export class EventsService {
                 userId: userId,
                 eventName,
                 description,
+                venue,
+                sharedGroup : groupId,
+                eventType
             },
         });
 
         const eventId = event.id;
         console.log(createEvent)
 
-        const userEvents = [
-          {
-            userId,
-            eventId,
-            role:"organizer"
+        // const userEvents = [
+        //   {
+        //     userId,
+        //     eventId,
+        //     role:"organizer"
 
-          },
-          ...organizers?.map((userId) => ({
-              userId,
-              eventId,
-              role: 'organizer',
-          })),
-          ...members?.map((userId) => ({
-              userId,
-              eventId,
-              role: 'member',
-          })),
-        ];
+        //   },
+        //   ...organizers?.map((userId) => ({
+        //       userId,
+        //       eventId,
+        //       role: 'organizer',
+        //   })),
+        //   ...members?.map((userId) => ({
+        //       userId,
+        //       eventId,
+        //       role: 'member',
+        //   })),
+        // ];
 
-        await this.databaseService.userEvents.createMany({
-            data: userEvents,
-        });
+        // await this.databaseService.userEvents.createMany({
+        //     data: userEvents,
+        // });
 
-        return {...event,role:"organizer"};
+        return {...event,role:"ORGANIZER"};
     } catch (error) {
         console.error('Error creating event:', error);
         throw new HttpException('An error occurred while creating the event', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -68,15 +75,88 @@ async getEvents(userId: number) {
       console.log("user not found")
         throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
-      const userEvents = await this.databaseService.userEvents.findMany({
-          where: {
-              userId,
-          },
-          select: {
-              eventId: true,
-              role: true,
-          },
-      });
+    const userGroups = await this.databaseService.userGroup.findMany({
+      where : {
+        userId,
+        role:"MEMBER"
+      },
+      select: {
+        groupId: true,
+        
+    }
+    })
+
+    const groupIds = userGroups.map(group => group.groupId);
+    console.log("gids----------->" +groupIds)
+    const invitedEvents  = await this.databaseService.event.findMany({
+      where : {
+        sharedGroup : {
+          in : groupIds
+        }
+      }
+    })
+    const organizedEvents = await this.databaseService.event.findMany({
+      where : {
+        userId
+      }
+    })
+    const invitedEventsWithRole = invitedEvents.map(event => ({
+      ...event,
+      role: 'MEMBER'
+    }));
+    console.log(invitedEvents);
+    
+    const organizedEventsWithRole = organizedEvents.map(event => ({
+      ...event,
+      role: 'ORGANIZER'
+    }));
+    console.log(organizedEvents);
+    
+    const allEvents = [
+      ...invitedEventsWithRole,
+      ...organizedEventsWithRole
+    ];
+
+    return allEvents
+
+
+
+    // 
+    console.log(allEvents)
+
+    // const myEvents = []
+
+    
+    //   let myEvents = await this.databaseService.event.findMany({
+    //     where : {
+    //       sharedGroup{
+    //         in:userGroups
+
+    //       }
+    //     },
+    //     select: {
+    //       id: true,
+          
+    //   },
+      
+      // myEvents.push(...perEvents)
+    // })
+
+
+    // myEvents.forEach((eventId)=>{
+
+    // })
+
+
+    const userEvents = await this.databaseService.userEvents.findMany({
+        where: {
+            userId,
+        },
+        select: {
+            eventId: true,
+            role: true,
+        },
+    });
 
       if (!userEvents || userEvents.length === 0) {
           return [];

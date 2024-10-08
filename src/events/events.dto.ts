@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { EventType } from '@prisma/client';
 import { IsArray, IsNumber, IsString, IsNotEmpty, ArrayNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateEventDto {
@@ -17,23 +18,38 @@ export class CreateEventDto {
     @IsOptional()
     description?: string;
 
-    @ApiProperty({
-        type: [Number],
-        default: [],
-    })
-    @IsArray()
+    @ApiProperty()
+    @IsString()
     @IsOptional()
-    @IsNumber({}, { each: true })
-    organizers: number[] = [];
+    eventType?: EventType;
 
-    @ApiProperty({
-        type: [Number],
-        default: [],
-    })
-    @IsArray()
+    @ApiProperty()
+    @IsString()
     @IsOptional()
-    @IsNumber({}, { each: true })
-    members: number[] = [];
+    venue?: string;
+
+    @ApiProperty()
+    @IsNumber()
+    @IsOptional()
+    groupId: number;
+
+    // @ApiProperty({
+    //     type: [Number],
+    //     default: [],
+    // })
+    // @IsArray()
+    // @IsOptional()
+    // @IsNumber({}, { each: true })
+    // organizers: number[] = [];
+
+    // @ApiProperty({
+    //     type: [Number],
+    //     default: [],
+    // })
+    // @IsArray()
+    // @IsOptional()
+    // @IsNumber({}, { each: true })
+    // members: number[] = [];
 }
 
 export class UpdateEventDto {

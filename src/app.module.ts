@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './users/users.module';
@@ -15,11 +15,13 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot({ isGlobal: true }),
     UserModule,
     AuthModule,
-    GiftsModule,
-    DatabaseModule,
-    EventsModule,
-    RegistriesModule,
-    GroupsModule,
+    // GiftsModule,
+    
+    forwardRef(() => DatabaseModule),
+    forwardRef(() => GiftsModule),
+    forwardRef(() => EventsModule), 
+    forwardRef(() => RegistriesModule),
+    forwardRef(() => GroupsModule),
   ],
   controllers: [AppController],
   providers: [AppService],
