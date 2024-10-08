@@ -40,6 +40,7 @@ async function bootstrap() {
     .addTag('registries')
     .addTag('auth')
     .addTag('users')
+    .addTag('Mail')
     .build();
 
   console.log(process.env.DATABASE_URL)

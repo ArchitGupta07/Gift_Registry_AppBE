@@ -4,6 +4,8 @@ import { Request, Response } from 'express';
 import { AuthService } from './auth.service'; 
 import { AuthDto } from './dto/auth.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+
+ import { CustomMailerService } from 'src/mail/mail.service';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -11,7 +13,9 @@ dotenv.config();
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService,
+   private readonly mailderService: CustomMailerService,
+  ) {}
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
@@ -46,7 +50,10 @@ export class AuthController {
       if (!user) {
         throw new Error('User creation failed');
       }
-  
+    
+        await this.mailderService.sendWelcomeEmail(user.email,user.username)
+      
+ 
       
       const userDto = new AuthDto(user);
     

@@ -32,8 +32,6 @@ constructor(private readonly groupsService : GroupsService){}
         }
     }
 
-
-
     @Get(':id')
     @Version('1')
     @ApiResponse({ status: 200, description: 'Group created successfully.' })
