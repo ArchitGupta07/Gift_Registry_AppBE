@@ -56,8 +56,7 @@ export class AuthController {
  
       
       const userDto = new AuthDto(user);
-    
-  console.log(userDto);
+      console.log(userDto);
       const redirectUrl = `${process.env.FRONTEND_URL}/dashboard?user=${encodeURIComponent(
         JSON.stringify(userDto),
       )}&token=${token}`;
@@ -70,5 +69,11 @@ export class AuthController {
     }
   }
 
+  private generateJwtToken(user: any) {
+    const payload = { userId: user.id, username: user.username, email: user.email };
+  console.log(payload);
+    return this.authService.generateJwtToken(payload);
  
+  }
+  
 }
