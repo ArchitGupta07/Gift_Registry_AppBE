@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Event" ADD COLUMN     "date" TEXT DEFAULT 'NA',
+ALTER COLUMN "venue" SET DEFAULT 'NA';

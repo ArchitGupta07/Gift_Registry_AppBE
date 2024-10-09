@@ -29,6 +29,11 @@ export class CreateEventDto {
     venue?: string;
 
     @ApiProperty()
+    @IsString()
+    @IsOptional()
+    date?: string;
+
+    @ApiProperty()
     @IsNumber()
     @IsOptional()
     groupId: number;

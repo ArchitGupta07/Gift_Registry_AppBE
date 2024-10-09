@@ -16,6 +16,7 @@ export class EventsService {
             eventName,
             description,
             venue="NA",
+            date="NA",
             eventType,
             groupId=1
             // organizers=[],
@@ -28,6 +29,7 @@ export class EventsService {
                 eventName,
                 description,
                 venue,
+                date,
                 sharedGroup : groupId,
                 eventType
             },
