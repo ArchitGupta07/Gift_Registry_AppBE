@@ -9,6 +9,7 @@ import { EventsModule } from './events/events.module';
 import { RegistriesModule } from './registries/registries.module';
 import { GroupsModule } from './groups/groups.module';
 import { ConfigModule } from '@nestjs/config';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ConfigModule } from '@nestjs/config';
     forwardRef(() => EventsModule), 
     forwardRef(() => RegistriesModule),
     forwardRef(() => GroupsModule),
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],

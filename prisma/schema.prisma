@@ -39,6 +39,7 @@ model User {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   registeries Registry[] @relation("UserRegistry")
+  comments Comment[]
   
 }
 
@@ -77,6 +78,7 @@ model Event {
   sharedGroup Int?     @default(-1)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  comments Comment[]
   
 }
 
@@ -111,4 +113,21 @@ model  UserGifts {
   id Int @id @default(autoincrement())
   userId Int 
   giftId Int  
+}
+
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  eventId    Int
+  commentText String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  parentId   Int?     
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event  Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  parent Comment? @relation("CommentToParent", fields: [parentId], references: [id])
+  replies Comment[] @relation("CommentToParent")
+  @@index([userId])
+  @@index([eventId])
 }
