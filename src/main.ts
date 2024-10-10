@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as dotenv from 'dotenv';
+import { setupWebSocket } from './gateway/websocket.adapter';
 dotenv.config();
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -23,7 +24,8 @@ async function bootstrap() {
 
   //======================================================
   app.enableCors({
-    origin: process.env.FRONTEND_URL,
+    // origin: process.env.FRONTEND_URL,
+    origin: "*",
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
@@ -42,6 +44,10 @@ async function bootstrap() {
     .addTag('users')
     .addTag('Mail')
     .build();
+
+
+   // Setup WebSocket Adapter
+   setupWebSocket(app);
 
   console.log(process.env.DATABASE_URL)
   const document = SwaggerModule.createDocument(app, config);

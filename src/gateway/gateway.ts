@@ -5,7 +5,8 @@ import { Server, Socket } from 'socket.io';
 
 
 
-@WebSocketGateway()
+@WebSocketGateway(4001,{ cors: { origin: '*',methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+credentials: true, } })
 export class MyGateway implements OnModuleInit{
 
   @WebSocketServer() 
