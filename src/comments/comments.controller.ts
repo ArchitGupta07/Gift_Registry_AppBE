@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Query, Res, Version } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Query, Res, Version } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { isInstance } from 'class-validator';
 import { Response } from 'express';
