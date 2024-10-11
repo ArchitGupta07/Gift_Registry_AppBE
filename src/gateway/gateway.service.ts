@@ -10,10 +10,10 @@ export class GatewayService {
 
   async create(createCommentDto) {
 
-    const { sender, eventId, commentText, parentId } = createCommentDto;
+    const { userId, eventId, commentText, parentId } = createCommentDto;
     return this.databaseService.comment.create({
       data:  {
-        userId:sender,
+        userId,
         eventId,
         commentText,
         parentId: parentId ?? null, // Optional: set to null if undefined
@@ -24,16 +24,38 @@ export class GatewayService {
   
   async findAll(eventId: number) {
     if (eventId) {
-      return this.databaseService.comment.findMany({
+      const comments =  await this.databaseService.comment.findMany({
         where: {
           eventId,
-          parentId: null, 
+        //   parentId: null, 
         },
-        include: {
-          replies: true,  
+        select: {
+            id: true,
+            userId: true,
+            eventId: true,
+            commentText:true,
+            parentId:true,
+            user: {
+                select: {
+                  username: true,  // Fetch the username from the related User table
+                },
+              },
+
         },
         orderBy: { createdAt: 'asc' },  
       });
+
+    //   console.log("comments.................")
+    //   console.log(comments)
+
+      return comments.map(comment => ({
+        id:comment.id,
+        userId: comment.userId,
+        eventId: comment.eventId,
+        commentText: comment.commentText,
+        parentId: comment.parentId,
+        username: comment.user.username, // Move username outside of user object
+      }));
     }
 
     return this.databaseService.comment.findMany();

@@ -93,18 +93,20 @@ export class MyGateway implements OnModuleInit {
     
     const newComment = await this.gatewayService.create(comment);
 
-    const comments = await this.gatewayService.findAll(7);
-    console.log(comments)
+    // const comments = await this.gatewayService.findAll(7);
+    // console.log(comments)
 
   
     this.server.emit('onComment', {
-      msg: 'New comment',
-      content: newComment.commentText,
+        id: newComment.id,
+    //   msg: 'New comment',
+      commentText: newComment.commentText,
     //   sender: client.id,
-      sender: comment.sender,
+      userId: comment.userId,
     //   commentId: newComment.id,
       eventId: comment.eventId,
       username:comment.username,
+      parentId:null
       
     });
   }
