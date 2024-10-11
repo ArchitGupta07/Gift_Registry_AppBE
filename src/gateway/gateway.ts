@@ -106,7 +106,7 @@ export class MyGateway implements OnModuleInit {
     //   commentId: newComment.id,
       eventId: comment.eventId,
       username:comment.username,
-      parentId:null
+      parentId:comment.parentId ? comment.parentId : null
       
     });
   }
