@@ -1,7 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateEventDto, UpdateEventDto } from './events.dto';
-import { group } from 'console';
 
 @Injectable()
 export class EventsService {

@@ -11,6 +11,7 @@ import { GroupsModule } from './groups/groups.module';
 import { ConfigModule } from '@nestjs/config';
 import { ChatModule } from './chat/chat.module';
 import { GatewayModule } from './gateway/gateway.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { GatewayModule } from './gateway/gateway.module';
     forwardRef(() => RegistriesModule),
     forwardRef(() => GroupsModule),
     ChatModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

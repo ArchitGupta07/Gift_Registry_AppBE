@@ -4,7 +4,7 @@ import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 
 
-@ApiTags('comments')
+@ApiTags('commentsWs')
 @Controller('gateway')
 export class GatewayController {
 
