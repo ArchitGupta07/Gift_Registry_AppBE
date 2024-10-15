@@ -37,24 +37,6 @@ export class CreateEventDto {
     @IsNumber()
     @IsOptional()
     groupId: number;
-
-    // @ApiProperty({
-    //     type: [Number],
-    //     default: [],
-    // })
-    // @IsArray()
-    // @IsOptional()
-    // @IsNumber({}, { each: true })
-    // organizers: number[] = [];
-
-    // @ApiProperty({
-    //     type: [Number],
-    //     default: [],
-    // })
-    // @IsArray()
-    // @IsOptional()
-    // @IsNumber({}, { each: true })
-    // members: number[] = [];
 }
 
 export class UpdateEventDto {

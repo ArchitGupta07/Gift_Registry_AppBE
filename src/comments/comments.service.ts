@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
+import { AddCommentDto } from './comments.dto';
 
 @Injectable()
 export class CommentsService {
@@ -61,6 +62,26 @@ export class CommentsService {
         }));
     
         return response;
+    }
+
+    async addComment(addCommentDto : AddCommentDto){
+        const {userId, commentText , parentId , eventId} = addCommentDto
+        // need to make additional check once finalized
+
+        const response = await this.databaseServive.comment.create({
+            omit : {
+                createdAt : true,
+                updatedAt : true
+            },
+            data : {
+                commentText,
+                parentId,
+                userId,
+                eventId 
+            }
+        } 
+        )
+        return response
     }
     
 }
