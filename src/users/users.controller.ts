@@ -6,6 +6,7 @@ import { CreateUserDto } from './dto/CreateUserDto';
 import { Prisma } from '@prisma/client';
 import { Response } from 'express';
 import { UserLoginDto } from './dto/UserLoginDto';
+import { CreateAddressDto } from './dto/CreateAddressDto';
 
 @ApiTags('users')
 @Controller('users')
@@ -189,5 +190,30 @@ export class UserController {
       throw new Error('Internal server error');
     }
   }
+
+
+
+
+  // UserAdress===================================================================
+
+  @Post("/address/")
+  @Version('1')
+  @ApiOperation({ summary: 'Create user address' })
+  @ApiBody({ type: CreateAddressDto })
+  async createAddress(@Body() createAddressDto: CreateAddressDto, @Res() res: Response) {
+    try {
+        const address = await this.userService.createAddress(createAddressDto);
+        return res.status(HttpStatus.CREATED).json({
+            message: 'Address created successfully',
+            data: address,
+        });
+    } catch (error) {
+        console.error('Error creating address:', error);
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+            message: 'Failed to create address',
+            error: error.message,
+        });
+    }
+}
 
 }

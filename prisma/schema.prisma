@@ -41,7 +41,20 @@ model User {
   updatedAt   DateTime @updatedAt
   registeries Registry[] @relation("UserRegistry")
   comments Comment[] @relation("UserComments")
+  address UserAddress[]  @relation("UserAddress")
   
+}
+
+model UserAddress{
+  id Int @id @default(autoincrement())
+  userId Int
+  user User @relation("UserAddress",fields: [userId], references: [id], onDelete: Cascade)
+  addressLine1 String
+  addressLine2 String? 
+  landmark String
+  pincode Int
+  city String
+  country String
 }
 
 
