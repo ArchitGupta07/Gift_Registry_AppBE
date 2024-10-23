@@ -215,5 +215,34 @@ export class UserController {
         });
     }
 }
+@Get('/address/:userId')
+@Version('1')
+@ApiOperation({ summary: 'Get user address by userID' })
+@ApiParam({ name: 'userId', type: Number, description: 'ID of the user whose address is to be fetched' })
+@ApiResponse({ status: HttpStatus.OK, description: 'Address fetched successfully' })
+@ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Address not found' })
+async getUserAddress(@Param('userId') userId: number, @Res() res: Response) {
+  try {
+    const address = await this.userService.getUserAddress(userId);
+
+    if (!address || address.length === 0) {
+      return res.status(HttpStatus.NOT_FOUND).json({
+        message: `Address for user with ID ${userId} not found`,
+      });
+    }
+
+    return res.status(HttpStatus.OK).json({
+      message: 'Address fetched successfully',
+      data: address,
+    });
+  } catch (error) {
+    console.error('Error fetching address:', error);
+    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      message: 'Failed to fetch address',
+      error: error.message,
+    });
+  }
+}
+
 
 }

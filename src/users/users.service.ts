@@ -167,4 +167,18 @@ async createAddress(createAddressDto: CreateAddressDto) {
 
   return address;
 }
+
+async getUserAddress(userId: number){
+  const address = await this.databaseService.userAddress.findMany({
+    where: {
+      userId: userId,
+    },
+  });
+
+  if(address.length===0){
+    throw new Error(`Address for user with ID ${userId} not found`);
+  }
+return address;
+}
+
 }
