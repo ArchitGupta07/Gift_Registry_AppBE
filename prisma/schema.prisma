@@ -119,6 +119,7 @@ model Gift{
   giftUrl String  
   price Int 
   registryId Int
+  Image String ? 
   registry Registry @relation("RegistryGifts",fields: [registryId], references: [id], onDelete: Cascade)
   giftStatus Boolean @default(false)
 }
