@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
 import { v4 as uuidv4 } from 'uuid';
-import { CreateUserDto } from './dto/CreateUserDto';
 import { CreateAddressDto } from './dto/CreateAddressDto';
+
 
 @Injectable()
 export class UserService {
@@ -146,10 +146,6 @@ export class UserService {
   }
 
 
-
-// UserAdress  
-
-
 async createAddress(createAddressDto: CreateAddressDto) {
   const { userId, addressLine1, addressLine2, landmark, pincode, city, country } = createAddressDto;
 
@@ -179,6 +175,19 @@ async getUserAddress(userId: number){
     throw new Error(`Address for user with ID ${userId} not found`);
   }
 return address;
+}
+
+
+
+async assignUserToGroup(userId: number, groupId: number,role: 'OWNER' | 'MEMBER') {
+  
+  return this.databaseService.userGroup.create({
+    data: {
+      userId: userId,
+      groupId: groupId,
+      role: role,
+    },
+  });
 }
 
 }

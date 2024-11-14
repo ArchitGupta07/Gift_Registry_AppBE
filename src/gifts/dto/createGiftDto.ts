@@ -6,6 +6,7 @@ import {
   IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsSemVer,
   IsString,
 } from 'class-validator';
@@ -30,4 +31,9 @@ export class CreateGiftDto {
   @IsNumber()
   @ApiProperty({ description: 'Registry of the gift' })
   registryId: number;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({description: 'The Image of the gift'})
+  Image: string
 }

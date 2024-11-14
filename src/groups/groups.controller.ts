@@ -1,7 +1,9 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, NotFoundException, Param, ParseIntPipe, Patch, Post, Put, Version } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, InternalServerErrorException, NotFoundException, Param, ParseIntPipe, Patch, Post, Put, Req, UseGuards, Version } from '@nestjs/common';
 import { GroupsService } from './groups.service';
 import { CreateGroupRelationDto, UpdateGroupDto } from './groups.dto';
 import { ApiBadRequestResponse, ApiInternalServerErrorResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/JwtAuthGuard';
+
 
 @ApiTags('groups')
 @Controller('groups')
@@ -145,7 +147,13 @@ constructor(private readonly groupsService : GroupsService){}
       );
     }
   }
+
+  @UseGuards(JwtAuthGuard)
+@Get('join/:groupId')
+async joinGroup(@Param('groupId') groupId: number, @Req() req): Promise<string>{
+const userId = req.user.id;
+return this.groupsService.addUserToGroupByLink(groupId,userId);
 }
 
-
+}
 

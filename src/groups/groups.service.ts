@@ -3,7 +3,7 @@ import { Prisma, Role } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
 import { CreateGroupRelationDto, UpdateGroupDto } from './groups.dto';
 import { UserService } from 'src/users/users.service';
-import { use } from 'passport';
+
 
 @Injectable()
 export class GroupsService {
@@ -206,6 +206,39 @@ export class GroupsService {
         }
     }
 
+    async addUserToGroupByLink(groupId: number, userId: number): Promise<string> {
+    
+        const group = await this.databaseService.group.findUnique({
+            where: { id: groupId },
+        });
+
+        if (!group) {
+            throw new NotFoundException(`Group with ID ${groupId} not found`);
+        }
+
+        
+        const userGroupRelation = await this.databaseService.userGroup.findFirst({
+            where: {
+                groupId,
+                userId,
+            },
+        });
+
+        if (userGroupRelation) {
+            throw new HttpException('User is already a member of this group', HttpStatus.BAD_REQUEST);
+        }
+
+    
+        await this.databaseService.userGroup.create({
+            data: {
+                userId,
+                groupId,
+                role: Role.MEMBER,
+            },
+        });
+
+        return `User with ID ${userId} added to group ${groupId} successfully`;
+    }
 
 }
 
